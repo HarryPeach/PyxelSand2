@@ -20,7 +20,8 @@ class TestCanvas():
             expect(item).to(be(None))
 
     def test_canvas_get(self):
-        """Test that the get function
+        """Test that the get function correctly returns the partciel in a specific
+        location
         """
         canvas = CanvasController(3, 3)
 
@@ -33,6 +34,37 @@ class TestCanvas():
             for y in range(0, 3):
                 particle = canvas.get(x, y)
                 if (x == 1 and y == 1) or (x == 1 and y == 2):
+                    expect(particle).to(be(sp))
+                else:
+                    expect(particle).to(be_none)
+
+    # TODO (Harry): Refactor - Cognitive Complexity
+    def test_canvas_set(self):
+        """Test the set function correctly sets the particle in a specific location
+        """
+        canvas = CanvasController(4, 4)
+
+        sp = SandParticle()
+
+        canvas.set(1, 1, sp)
+        canvas.set(2, 2, sp)
+
+        for x in range(0, 4):
+            for y in range(0, 4):
+                particle = canvas.get(x, y)
+                if (x, y) == (1, 1) or (x, y) == (2, 2):
+                    expect(particle).to(be(sp))
+                else:
+                    expect(particle).to(be_none)
+
+        canvas.set(1, 1, None)
+        canvas.set(2, 2, None)
+        canvas.set(3, 1, sp)
+
+        for x in range(0, 4):
+            for y in range(0, 4):
+                particle = canvas.get(x, y)
+                if (x == 3 and y == 1):
                     expect(particle).to(be(sp))
                 else:
                     expect(particle).to(be_none)
