@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "pysand2"
+version = "0.1.0"
+description = "Python Falling Sand Game - Second Attempt"
+authors = ["Harry Peach"]
+license = "All Rights Reserved"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pyxel = "^1.4.3"
+pylama = "^7.7.1"
+
+[tool.poetry.dev-dependencies]
+autopep8 = "^1.5.6"
+pycodestyle = "^2.7.0"
+pytest = "^6.2.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
