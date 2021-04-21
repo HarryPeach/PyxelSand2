@@ -8,12 +8,5 @@ class SandParticle(Particle):
         self.color = 12
 
     def update(self, x: int, y: int, canvas: CanvasController):
-        """Called when the particle must update its state
-
-        Args:
-            x (int): The current x location of the particle
-            y (int): The current y location of the particle
-            canvas (CanvasController): The current canvas' controller
-        """
         self.updated = True
         self.fall(x, y, canvas)

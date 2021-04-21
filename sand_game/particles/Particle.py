@@ -3,21 +3,36 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from sand_game.canvas import CanvasController
 
+from abc import ABC, abstractmethod
 import random
 
 
-class Particle:
+class Particle(ABC):
 
     def __init__(self):
         self.updated = False
         self.color = 0
 
+    @abstractmethod
     def update(self, x: int, y: int, canvas: CanvasController):
         """Called when the particle must update its state
+
+        Args:
+            x (int): The current x location of the particle
+            y (int): The current y location of the particle
+            canvas (CanvasController): The current canvas' controller
         """
         pass
 
     def fall(self, x: int, y: int, canvas: CanvasController):
+        """Simulates the particle falling
+
+        Args:
+            x (int): The current x-coordinate of the particle
+            y (int): The current y-coordinate of the particle
+            canvas (CanvasController): The canvas controller which the particle resides
+            within
+        """
         if y == canvas.height - 1:
             return
 
