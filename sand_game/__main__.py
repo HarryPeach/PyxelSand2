@@ -1,6 +1,7 @@
 from sand_game.particles.SandParticle import SandParticle
 from sand_game.canvas import CanvasController
 import pyxel
+import time
 
 
 class SandGame:
@@ -14,22 +15,12 @@ class SandGame:
             self.canvas_width, self.canvas_height)
 
         # TODO (Harry): Remove debug sand particle
-        self.canvas_controller.set(32, 1, SandParticle())
-        self.canvas_controller.set(32, 3, SandParticle())
-        self.canvas_controller.set(32, 5, SandParticle())
-        self.canvas_controller.set(32, 7, SandParticle())
-
-        self.i = 0
+        for i in range(0, 15):
+            self.canvas_controller.set(32, i, SandParticle())
 
         pyxel.run(self.update, self.draw)
 
     def update(self):
-        # TODO (Harry): Remove debug update slow
-        if self.i < 10:
-            self.i = self.i + 1
-            return
-        self.i = 0
-
         for x in range(self.canvas_width):
             for y in range(self.canvas_height):
                 particle = self.canvas_controller.get(x, y)
@@ -49,9 +40,9 @@ class SandGame:
     def draw(self):
         pyxel.text(10, 2, "Debug Canvas: ", 7)
         pyxel.rect(self.canvas_start_location[0] - 1, self.canvas_start_location[1] - 1,
-                   self.canvas_width + 1, self.canvas_height + 1, 8)
+                   self.canvas_width + 2, self.canvas_height + 2, 8)
         pyxel.rect(self.canvas_start_location[0], self.canvas_start_location[1],
-                   self.canvas_width - 1, self.canvas_height - 1, 0)
+                   self.canvas_width, self.canvas_height, 0)
         for x in range(self.canvas_width):
             for y in range(self.canvas_height):
                 particle = self.canvas_controller.get(x, y)

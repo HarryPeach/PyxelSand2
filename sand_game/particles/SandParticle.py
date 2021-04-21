@@ -15,6 +15,5 @@ class SandParticle(Particle):
             y (int): The current y location of the particle
             canvas (CanvasController): The current canvas' controller
         """
-        canvas.set(x, y + 1, canvas.get(x, y))
-        canvas.set(x, y, None)
         self.updated = True
+        self.fall(x, y, canvas)

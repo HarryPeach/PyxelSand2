@@ -28,7 +28,6 @@ class CanvasController():
         if y > self.height - 1 or y < 0:
             return
 
-        print(f"Setting ({x}, {y}): {(x % self.width)} + {(y * self.width)}")
         self.data[(x % self.width) + (y * self.width)] = particle
 
     def get(self, x: int, y: int) -> Union[Particle, None]:
