@@ -14,12 +14,6 @@ class SandGame:
 
         pyxel.load("assets/res.pyxres")
 
-        # Particle, u, v, w, h
-        self.particles = [
-            (SandParticle, 16, 5, 15, 5),
-            (WallParticle, 0, 10, 15, 5)
-        ]
-
         self.canvas_width = 100
         self.canvas_height = 100
         self.canvas_start_loc = (10, 10)
@@ -27,12 +21,21 @@ class SandGame:
         self.canvas_controller = CanvasController(
             self.canvas_width, self.canvas_height)
 
-        self.pen_size = 1
+        self.pen_size = 2
+        self.current_particle = SandParticle
 
         self.gui = Gui(90, 0)
-        self.gui.add_button(TexturedButton(lambda: print("wall"), 10 + 14, 10 + 8, 0, 10, 15, 5))
+        self.gui.add_button(
+            TexturedButton(lambda: self._set_current_particle(WallParticle),
+                           10 + 14, 10 + 8, 0, 10, 15, 5))
+        self.gui.add_button(
+            TexturedButton(lambda: self._set_current_particle(WallParticle),
+                           10 + 14, 10 + 8, 0, 10, 15, 5))
 
         pyxel.run(self.update, self.draw)
+
+    def _set_current_particle(self, particle: Particle):
+        self.current_particle = particle
 
     def _place_particle(self, particle: Union[Particle, None], center_x: int,
                         center_y: int, radius: int):
@@ -40,14 +43,18 @@ class SandGame:
             for x in range(-radius, radius):
                 if (x * x + y * y <= radius * radius):
                     if particle is None:
-                        self.canvas_controller.set(center_x + x, center_y + y, None)
+                        self.canvas_controller.set(
+                            center_x + x, center_y + y, None)
                     else:
                         self.canvas_controller.set(center_x + x, center_y + y,
                                                    particle())
 
     def update(self):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
+            self.gui.handle_click(pyxel.mouse_x, pyxel.mouse_y)
+
         if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
-            self._place_particle(SandParticle, pyxel.mouse_x -
+            self._place_particle(self.current_particle, pyxel.mouse_x -
                                  self.canvas_start_loc[0],
                                  pyxel.mouse_y - self.canvas_start_loc[1],
                                  self.pen_size)
