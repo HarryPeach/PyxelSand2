@@ -6,7 +6,7 @@ authors = ["Harry Peach"]
 license = "All Rights Reserved"
 
 [tool.poetry.dependencies]
-python = "3.8"
+python = "^3.8"
 pyxel = "^1.4.3"
 pylama = "^7.7.1"
 
