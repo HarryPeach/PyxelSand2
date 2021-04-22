@@ -106,8 +106,7 @@ class SandGame:
             self._set_pen_size(self.pen_size - 1)
 
         self._update_gui_items()
-        if not self.paused:
-            self._update_particles()
+        self._update_particles()
 
     def _update_gui_items(self):
         self._gui_pen_label.set_value(str(self.pen_size))
@@ -122,6 +121,9 @@ class SandGame:
         self._gui_play_button.set_hidden(not self.paused)
 
     def _update_particles(self):
+        if self.paused:
+            return
+
         # Update every particle
         for x in range(self.canvas_width):
             for y in range(self.canvas_height):
