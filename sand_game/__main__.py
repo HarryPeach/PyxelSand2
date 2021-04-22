@@ -24,6 +24,7 @@ class SandGame:
         self.pen_size = 2
         self.paused = False
         self.current_particle = SandParticle
+        self.overwrite = False
 
         self.gui = Gui(114, 10)
 
@@ -51,8 +52,8 @@ class SandGame:
         # Particle gui items
         self.gui.add_text(Label("Particles: ", 0, 26, 7))
         self._gui_sand_button = TexturedButton(
-                            lambda: self._set_current_particle(SandParticle),
-                            0, 34, 0, 5, 15, 5)
+            lambda: self._set_current_particle(SandParticle),
+            0, 34, 0, 5, 15, 5)
         self.gui.add_button(self._gui_sand_button)
         self._gui_wall_button = TexturedButton(
             lambda: self._set_current_particle(WallParticle),
@@ -82,6 +83,11 @@ class SandGame:
                         self.canvas_controller.set(
                             center_x + x, center_y + y, None)
                     else:
+                        # Check if overwrite is enabled before placing
+                        if not self.overwrite and \
+                               self.canvas_controller.get(center_x + x, center_y + y) \
+                               is not None:
+                            continue
                         self.canvas_controller.set(center_x + x, center_y + y,
                                                    particle())
 
