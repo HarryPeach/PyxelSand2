@@ -43,6 +43,10 @@ class Particle(ABC):
 
         dx_choice = random.choice([-1, 1])
 
+        # Make sure the particles don't leave the canvas
+        if (x + dx_choice) >= canvas.width or (x + dx_choice) < 0:
+            return
+
         # If there is no particle to the sides of the particle
         if canvas.get(x + dx_choice, y + 1) is None:
             canvas.set(x + dx_choice, y + 1, canvas.get(x, y))
