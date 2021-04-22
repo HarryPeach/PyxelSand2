@@ -39,7 +39,7 @@ class SandGame:
 
     def update(self):
         if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
-            self._place_particle(WallParticle, pyxel.mouse_x -
+            self._place_particle(SandParticle, pyxel.mouse_x -
                                  self.canvas_start_loc[0],
                                  pyxel.mouse_y - self.canvas_start_loc[1],
                                  self.pen_size)
@@ -49,11 +49,19 @@ class SandGame:
                 None, pyxel.mouse_x - self.canvas_start_loc[0],
                 pyxel.mouse_y - self.canvas_start_loc[1], self.pen_size)
 
-        if pyxel.mouse_wheel == 1:
+        if pyxel.mouse_wheel == 1 and self.pen_size < 9:
             self.pen_size = self.pen_size + 1
-        if pyxel.mouse_wheel == -1:
+        if pyxel.mouse_wheel == -1 and self.pen_size > 1:
             self.pen_size = self.pen_size - 1
 
+        self._update_particles()
+
+        for particle in self.canvas_controller.data:
+            if particle is None:
+                continue
+            particle.updated = False
+
+    def _update_particles(self):
         for x in range(self.canvas_width):
             for y in range(self.canvas_height):
                 particle = self.canvas_controller.get(x, y)
@@ -64,11 +72,6 @@ class SandGame:
                     continue
 
                 particle.update(x, y, self.canvas_controller)
-
-        for particle in self.canvas_controller.data:
-            if particle is None:
-                continue
-            particle.updated = False
 
     def draw(self):
         pyxel.cls(1)
