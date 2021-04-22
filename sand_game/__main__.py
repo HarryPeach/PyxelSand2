@@ -3,7 +3,7 @@ from sand_game.particles.WallParticle import WallParticle
 from sand_game.particles.Particle import Particle
 from sand_game.canvas import CanvasController
 from sand_game.draw_utils import draw_cursor
-from sand_game.gui import draw_menu
+from sand_game.gui import Gui, TexturedButton
 from typing import Union
 import pyxel
 
@@ -14,6 +14,12 @@ class SandGame:
 
         pyxel.load("assets/res.pyxres")
 
+        # Particle, u, v, w, h
+        self.particles = [
+            (SandParticle, 16, 5, 15, 5),
+            (WallParticle, 0, 10, 15, 5)
+        ]
+
         self.canvas_width = 100
         self.canvas_height = 100
         self.canvas_start_loc = (10, 10)
@@ -22,6 +28,9 @@ class SandGame:
             self.canvas_width, self.canvas_height)
 
         self.pen_size = 1
+
+        self.gui = Gui(90, 0)
+        self.gui.add_button(TexturedButton(lambda: print("wall"), 10 + 14, 10 + 8, 0, 10, 15, 5))
 
         pyxel.run(self.update, self.draw)
 
@@ -76,7 +85,6 @@ class SandGame:
 
     def draw(self):
         pyxel.cls(1)
-        draw_menu(self, 114, 10)
 
         pyxel.text(10, 2, "Sand Game v2", 7)
         pyxel.rect(self.canvas_start_loc[0] - 1, self.canvas_start_loc[1] - 1,
@@ -91,6 +99,7 @@ class SandGame:
                         x + self.canvas_start_loc[0],
                         y + self.canvas_start_loc[1], 1, 1, particle.color)
 
+        self.gui.draw()
         draw_cursor(self.pen_size - 1, 7)
 
 
