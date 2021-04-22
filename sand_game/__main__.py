@@ -4,7 +4,7 @@ from sand_game.particles.Particle import Particle
 from sand_game.canvas import CanvasController
 from sand_game.draw_utils import draw_cursor
 from sand_game.gui import Gui, TexturedButton, Label
-from typing import Text, Union
+from typing import Union
 import pyxel
 
 
@@ -22,12 +22,17 @@ class SandGame:
             self.canvas_width, self.canvas_height)
 
         self.pen_size = 2
+        self.paused = False
         self.current_particle = SandParticle
 
         self.gui = Gui(114, 10)
 
-        self.gui.add_button(TexturedButton(lambda: (), 0, 0, 10, 0, 5, 5))
-        self.gui.add_button(TexturedButton(lambda: (), 6, 0, 15, 0, 5, 5))
+        self._gui_pause_button = TexturedButton(lambda: self._set_paused(True), 0, 0,
+                                                10, 0, 5, 5)
+        self.gui.add_button(self._gui_pause_button)
+        self._gui_play_button = TexturedButton(lambda: self._set_paused(False), 0, 0,
+                                               15, 0, 5, 5)
+        self.gui.add_button(self._gui_play_button)
 
         # Pen size gui items
         self.gui.add_text(Label("Pen Size:", 0, 10, 7))
@@ -62,6 +67,9 @@ class SandGame:
             return
         self.pen_size = new_size
 
+    def _set_paused(self, paused: bool) -> None:
+        self.paused = paused
+
     def _place_particle(self, particle: Union[Particle, None], center_x: int,
                         center_y: int, radius: int):
         for y in range(-radius, radius):
@@ -75,6 +83,10 @@ class SandGame:
                                                    particle())
 
     def update(self):
+
+        if pyxel.btnp(pyxel.KEY_SPACE):
+            self._set_paused(not self.paused)
+
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
             self.gui.handle_click(pyxel.mouse_x, pyxel.mouse_y)
 
@@ -95,15 +107,20 @@ class SandGame:
             self._set_pen_size(self.pen_size - 1)
 
         self._update_gui_items()
-        self._update_particles()
+        if not self.paused:
+            self._update_particles()
 
     def _update_gui_items(self):
         self._gui_pen_label.set_value(str(self.pen_size))
+
         self._gui_sand_button.set_enabled(
             self.current_particle == SandParticle)
         self._gui_wall_button.set_enabled(
             self.current_particle == WallParticle
         )
+
+        self._gui_pause_button.set_hidden(self.paused)
+        self._gui_play_button.set_hidden(not self.paused)
 
     def _update_particles(self):
         # Update every particle
