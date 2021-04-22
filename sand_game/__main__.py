@@ -83,7 +83,6 @@ class SandGame:
                                                    particle())
 
     def update(self):
-
         if pyxel.btnp(pyxel.KEY_SPACE):
             self._set_paused(not self.paused)
 
