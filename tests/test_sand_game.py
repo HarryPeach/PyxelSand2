@@ -3,6 +3,8 @@ from sand_game.__main__ import SandGame
 from sand_game.particles.SandParticle import SandParticle
 from expects import expect, be, be_none
 
+import sys
+
 
 class SandGameWithoutInit(SandGame):
     """A child of the SandGame class that re-implements certain methods for
@@ -22,6 +24,7 @@ class TestSandGame():
     def test_simulation_pause(_) -> None:
         """Tests that when a simulation is paused, a particle does not update
         """
+        sys.modules["pyxel"] = None
         game = SandGameWithoutInit()
         sp = SandParticle()
         game.canvas_controller.set(0, 0, sp)
