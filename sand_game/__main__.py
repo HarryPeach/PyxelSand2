@@ -6,7 +6,6 @@ from sand_game.draw_utils import draw_cursor
 from sand_game.gui import draw_menu
 from typing import Union
 import pyxel
-import math
 
 
 class SandGame:
@@ -56,12 +55,8 @@ class SandGame:
 
         self._update_particles()
 
-        for particle in self.canvas_controller.data:
-            if particle is None:
-                continue
-            particle.updated = False
-
     def _update_particles(self):
+        # Update every particle
         for x in range(self.canvas_width):
             for y in range(self.canvas_height):
                 particle = self.canvas_controller.get(x, y)
@@ -72,6 +67,12 @@ class SandGame:
                     continue
 
                 particle.update(x, y, self.canvas_controller)
+
+        # Reset the updated status of every particle to false
+        for particle in self.canvas_controller.data:
+            if particle is None:
+                continue
+            particle.updated = False
 
     def draw(self):
         pyxel.cls(1)
