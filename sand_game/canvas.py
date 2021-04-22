@@ -15,6 +15,12 @@ class CanvasController():
         self.height = height
         self.data = [None] * width * height
 
+    def clear(self):
+        """Clears the canvas
+        """
+        for i in range(0, len(self.data)):
+            self.data[i] = None
+
     def set(self, x: int, y: int, particle: Union[Particle, None]) -> None:
         """Sets the particle at the current location
 

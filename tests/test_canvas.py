@@ -68,3 +68,18 @@ class TestCanvas():
                     expect(particle).to(be(sp))
                 else:
                     expect(particle).to(be_none)
+
+    def test_canvas_clear(self):
+        """Tests that a canvas is correctly cleared
+        """
+        canvas = CanvasController(10, 10)
+
+        canvas.set(1, 0, SandParticle())
+        canvas.set(9, 1, SandParticle())
+        canvas.set(8, 4, SandParticle())
+        canvas.set(1, 2, SandParticle())
+        canvas.set(3, 1, SandParticle())
+
+        canvas.clear()
+        for particle in canvas.data:
+            expect(particle).to(be_none)

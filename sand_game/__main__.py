@@ -34,6 +34,9 @@ class SandGame:
                                                15, 0, 5, 5)
         self.gui.add_button(self._gui_play_button)
 
+        self.gui.add_button(TexturedButton(lambda: self.canvas_controller.clear(), 6,
+                                           0, 20, 0, 5, 5))
+
         # Pen size gui items
         self.gui.add_text(Label("Pen Size:", 0, 10, 7))
         self._gui_pen_label = Label(str(self.pen_size), 11, 18, 7)
