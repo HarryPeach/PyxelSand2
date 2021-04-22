@@ -5,6 +5,7 @@ from sand_game.canvas import CanvasController
 from sand_game.draw_utils import draw_cursor
 from sand_game.gui import Gui, TexturedButton, Label
 from typing import Union
+from itertools import product
 import pyxel
 
 
@@ -24,6 +25,7 @@ class SandGame:
         self.pen_size = 2
         self.paused = False
         self.current_particle = SandParticle
+        self.overwrite = False
 
         self.gui = Gui(114, 10)
 
@@ -31,11 +33,21 @@ class SandGame:
                                                 10, 0, 5, 5)
         self.gui.add_button(self._gui_pause_button)
         self._gui_play_button = TexturedButton(lambda: self._set_paused(False), 0, 0,
-                                               15, 0, 5, 5)
+                                               15, 0, 5, 5, hidden=True)
         self.gui.add_button(self._gui_play_button)
 
         self.gui.add_button(TexturedButton(lambda: self.canvas_controller.clear(), 6,
                                            0, 20, 0, 5, 5))
+
+        self._gui_overwrite_button_enable = TexturedButton(
+            lambda: self._set_overwrite(True), 12, 0, 30, 0, 5, 5
+        )
+        self.gui.add_button(self._gui_overwrite_button_enable)
+
+        self._gui_overwrite_button_disable = TexturedButton(
+            lambda: self._set_overwrite(False), 12, 0, 25, 0, 5, 5, hidden=True
+        )
+        self.gui.add_button(self._gui_overwrite_button_disable)
 
         # Pen size gui items
         self.gui.add_text(Label("Pen Size:", 0, 10, 7))
@@ -51,8 +63,8 @@ class SandGame:
         # Particle gui items
         self.gui.add_text(Label("Particles: ", 0, 26, 7))
         self._gui_sand_button = TexturedButton(
-                            lambda: self._set_current_particle(SandParticle),
-                            0, 34, 0, 5, 15, 5)
+            lambda: self._set_current_particle(SandParticle),
+            0, 34, 0, 5, 15, 5)
         self.gui.add_button(self._gui_sand_button)
         self._gui_wall_button = TexturedButton(
             lambda: self._set_current_particle(WallParticle),
@@ -73,17 +85,49 @@ class SandGame:
     def _set_paused(self, paused: bool) -> None:
         self.paused = paused
 
+    def _set_overwrite(self, overwrite: bool) -> None:
+        self.overwrite = overwrite
+
     def _place_particle(self, particle: Union[Particle, None], center_x: int,
                         center_y: int, radius: int):
-        for y in range(-radius, radius):
-            for x in range(-radius, radius):
-                if (x * x + y * y <= radius * radius):
-                    if particle is None:
-                        self.canvas_controller.set(
-                            center_x + x, center_y + y, None)
-                    else:
-                        self.canvas_controller.set(center_x + x, center_y + y,
-                                                   particle())
+        """Places particles at the given location in a circle
+
+        Args:
+            particle (Union[Particle, None]): The particle to place, or None to
+            clear the location
+            center_x (int): The x-coordinate for the center of the circle
+            center_y (int): The y-coordinate for the center of the circle
+            radius (int): The radius of the circle
+        """
+        for y, x in product(range(-radius, radius), repeat=2):
+            if (x * x + y * y > radius * radius):
+                continue
+
+            if particle is None:
+                self.canvas_controller.set(
+                    center_x + x, center_y + y, None)
+            else:
+                # Check if overwrite is enabled before placing
+                if self._can_place_particle(center_x + x, center_y + y):
+                    self.canvas_controller.set(center_x + x, center_y + y,
+                                               particle())
+
+    def _can_place_particle(self, x: int, y: int) -> bool:
+        """Whether a particle is allowed to be placed at the current location based
+        on current overwrite rules
+
+        Args:
+            x (int): The x co-ordinate of the particle
+            y (int): The y co-ordinate of the particle
+
+        Returns:
+            bool: Whether the particle can be placed
+        """
+        particle_at = self.canvas_controller.get(x, y)
+        if not self.overwrite and particle_at is not None:
+            return False
+        else:
+            return True
 
     def update(self):
         if pyxel.btnp(pyxel.KEY_SPACE):
@@ -122,6 +166,9 @@ class SandGame:
 
         self._gui_pause_button.set_hidden(self.paused)
         self._gui_play_button.set_hidden(not self.paused)
+
+        self._gui_overwrite_button_enable.set_hidden(self.overwrite)
+        self._gui_overwrite_button_disable.set_hidden(not self.overwrite)
 
     def _update_particles(self):
         if self.paused:
