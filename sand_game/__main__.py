@@ -3,7 +3,7 @@ from sand_game.particles.WallParticle import WallParticle
 from sand_game.particles.Particle import Particle
 from sand_game.canvas import CanvasController
 from sand_game.draw_utils import draw_cursor
-from sand_game.gui import draw_menu
+from sand_game.gui import Gui, TexturedButton, Label
 from typing import Union
 import pyxel
 
@@ -21,9 +21,40 @@ class SandGame:
         self.canvas_controller = CanvasController(
             self.canvas_width, self.canvas_height)
 
-        self.pen_size = 1
+        self.pen_size = 2
+        self.current_particle = SandParticle
+
+        self.gui = Gui(114, 10)
+        self.gui.add_text(Label("Pen Size:", 0, 0, 7))
+        self._gui_pen_label = Label(str(self.pen_size), 11, 10, 7)
+        self.gui.add_button(
+            TexturedButton(lambda: self._set_pen_size(self.pen_size - 1),
+                           0, 10, 5, 0, 5, 5))
+        self.gui.add_text(self._gui_pen_label)
+        self.gui.add_button(
+            TexturedButton(lambda: self._set_pen_size(self.pen_size + 1),
+                           20, 10, 0, 0, 5, 5))
+
+        self.gui.add_text(Label("Particles: ", 0, 26, 7))
+        self._gui_sand_button = TexturedButton(
+                            lambda: self._set_current_particle(SandParticle),
+                            0, 34, 0, 5, 15, 5)
+        self.gui.add_button(self._gui_sand_button)
+        self._gui_wall_button = TexturedButton(
+            lambda: self._set_current_particle(WallParticle),
+            16, 34, 0, 10, 15, 5
+        )
+        self.gui.add_button(self._gui_wall_button)
 
         pyxel.run(self.update, self.draw)
+
+    def _set_current_particle(self, particle: Particle):
+        self.current_particle = particle
+
+    def _set_pen_size(self, new_size: int):
+        if new_size < 1 or new_size > 9:
+            return
+        self.pen_size = new_size
 
     def _place_particle(self, particle: Union[Particle, None], center_x: int,
                         center_y: int, radius: int):
@@ -31,14 +62,18 @@ class SandGame:
             for x in range(-radius, radius):
                 if (x * x + y * y <= radius * radius):
                     if particle is None:
-                        self.canvas_controller.set(center_x + x, center_y + y, None)
+                        self.canvas_controller.set(
+                            center_x + x, center_y + y, None)
                     else:
                         self.canvas_controller.set(center_x + x, center_y + y,
                                                    particle())
 
     def update(self):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
+            self.gui.handle_click(pyxel.mouse_x, pyxel.mouse_y)
+
         if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
-            self._place_particle(SandParticle, pyxel.mouse_x -
+            self._place_particle(self.current_particle, pyxel.mouse_x -
                                  self.canvas_start_loc[0],
                                  pyxel.mouse_y - self.canvas_start_loc[1],
                                  self.pen_size)
@@ -48,12 +83,21 @@ class SandGame:
                 None, pyxel.mouse_x - self.canvas_start_loc[0],
                 pyxel.mouse_y - self.canvas_start_loc[1], self.pen_size)
 
-        if pyxel.mouse_wheel == 1 and self.pen_size < 9:
-            self.pen_size = self.pen_size + 1
-        if pyxel.mouse_wheel == -1 and self.pen_size > 1:
-            self.pen_size = self.pen_size - 1
+        if pyxel.mouse_wheel == 1:
+            self._set_pen_size(self.pen_size + 1)
+        if pyxel.mouse_wheel == -1:
+            self._set_pen_size(self.pen_size - 1)
 
+        self._update_gui_items()
         self._update_particles()
+
+    def _update_gui_items(self):
+        self._gui_pen_label.set_value(str(self.pen_size))
+        self._gui_sand_button.set_enabled(
+            self.current_particle == SandParticle)
+        self._gui_wall_button.set_enabled(
+            self.current_particle == WallParticle
+        )
 
     def _update_particles(self):
         # Update every particle
@@ -76,7 +120,6 @@ class SandGame:
 
     def draw(self):
         pyxel.cls(1)
-        draw_menu(self, 114, 10)
 
         pyxel.text(10, 2, "Sand Game v2", 7)
         pyxel.rect(self.canvas_start_loc[0] - 1, self.canvas_start_loc[1] - 1,
@@ -91,6 +134,7 @@ class SandGame:
                         x + self.canvas_start_loc[0],
                         y + self.canvas_start_loc[1], 1, 1, particle.color)
 
+        self.gui.draw()
         draw_cursor(self.pen_size - 1, 7)
 
 
