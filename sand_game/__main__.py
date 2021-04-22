@@ -1,9 +1,12 @@
 from sand_game.particles.SandParticle import SandParticle
 from sand_game.particles.WallParticle import WallParticle
+from sand_game.particles.Particle import Particle
 from sand_game.canvas import CanvasController
 from sand_game.draw_utils import draw_cursor
 from sand_game.gui import draw_menu
+from typing import Union
 import pyxel
+import math
 
 
 class SandGame:
@@ -23,16 +26,33 @@ class SandGame:
 
         pyxel.run(self.update, self.draw)
 
+    def _place_particle(self, particle: Union[Particle, None], center_x: int,
+                        center_y: int, radius: int):
+        for y in range(-radius, radius):
+            for x in range(-radius, radius):
+                if (x * x + y * y <= radius * radius):
+                    if particle is None:
+                        self.canvas_controller.set(center_x + x, center_y + y, None)
+                    else:
+                        self.canvas_controller.set(center_x + x, center_y + y,
+                                                   particle())
+
     def update(self):
         if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
-            self.canvas_controller.set(
-                pyxel.mouse_x - self.canvas_start_loc[0],
-                pyxel.mouse_y - self.canvas_start_loc[1], SandParticle())
+            self._place_particle(WallParticle, pyxel.mouse_x -
+                                 self.canvas_start_loc[0],
+                                 pyxel.mouse_y - self.canvas_start_loc[1],
+                                 self.pen_size)
 
         if pyxel.btn(pyxel.MOUSE_RIGHT_BUTTON):
-            self.canvas_controller.set(
-                pyxel.mouse_x - self.canvas_start_loc[0],
-                pyxel.mouse_y - self.canvas_start_loc[1], None)
+            self._place_particle(
+                None, pyxel.mouse_x - self.canvas_start_loc[0],
+                pyxel.mouse_y - self.canvas_start_loc[1], self.pen_size)
+
+        if pyxel.mouse_wheel == 1:
+            self.pen_size = self.pen_size + 1
+        if pyxel.mouse_wheel == -1:
+            self.pen_size = self.pen_size - 1
 
         for x in range(self.canvas_width):
             for y in range(self.canvas_height):
@@ -67,7 +87,7 @@ class SandGame:
                         x + self.canvas_start_loc[0],
                         y + self.canvas_start_loc[1], 1, 1, particle.color)
 
-        draw_cursor(7)
+        draw_cursor(self.pen_size - 1, 7)
 
 
 if __name__ == "__main__":
