@@ -22,19 +22,30 @@ class SandGame:
             self.canvas_width, self.canvas_height)
 
         self.pen_size = 2
+        self.paused = False
         self.current_particle = SandParticle
 
         self.gui = Gui(114, 10)
-        self.gui.add_text(Label("Pen Size:", 0, 0, 7))
-        self._gui_pen_label = Label(str(self.pen_size), 11, 10, 7)
+
+        self._gui_pause_button = TexturedButton(lambda: self._set_paused(True), 0, 0,
+                                                10, 0, 5, 5)
+        self.gui.add_button(self._gui_pause_button)
+        self._gui_play_button = TexturedButton(lambda: self._set_paused(False), 0, 0,
+                                               15, 0, 5, 5)
+        self.gui.add_button(self._gui_play_button)
+
+        # Pen size gui items
+        self.gui.add_text(Label("Pen Size:", 0, 10, 7))
+        self._gui_pen_label = Label(str(self.pen_size), 11, 18, 7)
         self.gui.add_button(
             TexturedButton(lambda: self._set_pen_size(self.pen_size - 1),
-                           0, 10, 5, 0, 5, 5))
+                           0, 18, 5, 0, 5, 5))
         self.gui.add_text(self._gui_pen_label)
         self.gui.add_button(
             TexturedButton(lambda: self._set_pen_size(self.pen_size + 1),
-                           20, 10, 0, 0, 5, 5))
+                           20, 18, 0, 0, 5, 5))
 
+        # Particle gui items
         self.gui.add_text(Label("Particles: ", 0, 26, 7))
         self._gui_sand_button = TexturedButton(
                             lambda: self._set_current_particle(SandParticle),
@@ -56,6 +67,9 @@ class SandGame:
             return
         self.pen_size = new_size
 
+    def _set_paused(self, paused: bool) -> None:
+        self.paused = paused
+
     def _place_particle(self, particle: Union[Particle, None], center_x: int,
                         center_y: int, radius: int):
         for y in range(-radius, radius):
@@ -69,6 +83,9 @@ class SandGame:
                                                    particle())
 
     def update(self):
+        if pyxel.btnp(pyxel.KEY_SPACE):
+            self._set_paused(not self.paused)
+
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
             self.gui.handle_click(pyxel.mouse_x, pyxel.mouse_y)
 
@@ -93,13 +110,20 @@ class SandGame:
 
     def _update_gui_items(self):
         self._gui_pen_label.set_value(str(self.pen_size))
+
         self._gui_sand_button.set_enabled(
             self.current_particle == SandParticle)
         self._gui_wall_button.set_enabled(
             self.current_particle == WallParticle
         )
 
+        self._gui_pause_button.set_hidden(self.paused)
+        self._gui_play_button.set_hidden(not self.paused)
+
     def _update_particles(self):
+        if self.paused:
+            return
+
         # Update every particle
         for x in range(self.canvas_width):
             for y in range(self.canvas_height):

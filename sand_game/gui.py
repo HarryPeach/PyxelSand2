@@ -9,7 +9,7 @@ import pyxel
 
 class TexturedButton():
     def __init__(self, action: Callable, x: int, y: int, u: int, v: int, width: int,
-                 height: int, enabled: bool = False):
+                 height: int, enabled: bool = False, hidden: bool = False):
         self.action = action
         self.x = x
         self.y = y
@@ -18,9 +18,13 @@ class TexturedButton():
         self.width = width
         self.height = height
         self.enabled = enabled
+        self.hidden = hidden
 
     def set_enabled(self, enabled: bool) -> None:
         self.enabled = enabled
+
+    def set_hidden(self, hidden: bool) -> None:
+        self.hidden = hidden
 
 
 class Label():
@@ -32,12 +36,6 @@ class Label():
 
     def set_value(self, value: str) -> None:
         self.value = value
-
-# def draw_menu(instance, start_x: int, start_y: int):
-#     pyxel.text(start_x, start_y, "PEN SIZE", 7)
-#     pyxel.blt(start_x, start_y + 8, 0, 5, 0, 5, 5)
-#     pyxel.text(start_x + 8, start_y + 8, str(instance.pen_size), 7)
-#     pyxel.blt(start_x + 14, start_y + 8, 0, 0, 0, 5, 5)
 
 
 class Gui():
@@ -59,12 +57,15 @@ class Gui():
 
     def _draw_buttons(self) -> None:
         for button in self.buttons:
+            if button.hidden:
+                continue
+
             if not button.enabled:
                 pyxel.blt(self.start_x + button.x, self.start_y + button.y, 0, button.u,
                           button.v, button.width, button.height)
             else:
-                pyxel.blt(self.start_x + button.x, self.start_y + button.y, 0, button.u + 16,
-                          button.v, button.width, button.height)
+                pyxel.blt(self.start_x + button.x, self.start_y + button.y, 0,
+                          button.u + 16, button.v, button.width, button.height)
 
     def add_button(self, button: TexturedButton) -> None:
         self.buttons.append(button)
@@ -74,7 +75,11 @@ class Gui():
 
     def handle_click(self, x: int, y: int):
         for button in self.buttons:
+            if button.hidden:
+                continue
+
             start_x: int = button.x + self.start_x
             start_y: int = button.y + self.start_y
-            if (x > start_x) and (x < start_x + button.width) and (y > start_y) and (y < start_y + button.height):
+            if (x > start_x) and (x < start_x + button.width) and (y > start_y) \
+               and (y < start_y + button.height):
                 button.action()
