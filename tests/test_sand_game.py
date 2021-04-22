@@ -1,9 +1,12 @@
+import sys
+from unittest.mock import MagicMock
+sys.modules["pyxel"] = MagicMock()
+
 from sand_game.canvas import CanvasController
 from sand_game.__main__ import SandGame
 from sand_game.particles.SandParticle import SandParticle
 from expects import expect, be, be_none
 
-import sys
 
 
 class SandGameWithoutInit(SandGame):
@@ -24,7 +27,6 @@ class TestSandGame():
     def test_simulation_pause(_) -> None:
         """Tests that when a simulation is paused, a particle does not update
         """
-        sys.modules["pyxel"] = None
         game = SandGameWithoutInit()
         sp = SandParticle()
         game.canvas_controller.set(0, 0, sp)
