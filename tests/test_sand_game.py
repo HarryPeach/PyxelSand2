@@ -1,12 +1,13 @@
+# Stop pyxel from being imported during a test as this can cause test failures due to
+# the CI test environment not supporting graphics
 import sys
 from unittest.mock import MagicMock
 sys.modules["pyxel"] = MagicMock()
 
-from sand_game.canvas import CanvasController
-from sand_game.__main__ import SandGame
-from sand_game.particles.SandParticle import SandParticle
-from expects import expect, be, be_none
-
+from sand_game.canvas import CanvasController  # noqa
+from sand_game.__main__ import SandGame  # noqa
+from sand_game.particles.SandParticle import SandParticle  # noqa
+from expects import expect, be, be_none  # noqa
 
 
 class SandGameWithoutInit(SandGame):
