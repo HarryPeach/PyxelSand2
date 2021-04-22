@@ -4,7 +4,7 @@ from sand_game.particles.Particle import Particle
 from sand_game.canvas import CanvasController
 from sand_game.draw_utils import draw_cursor
 from sand_game.gui import Gui, TexturedButton, Label
-from typing import Union
+from typing import Text, Union
 import pyxel
 
 
@@ -25,16 +25,22 @@ class SandGame:
         self.current_particle = SandParticle
 
         self.gui = Gui(114, 10)
-        self.gui.add_text(Label("Pen Size:", 0, 0, 7))
-        self._gui_pen_label = Label(str(self.pen_size), 11, 10, 7)
+
+        self.gui.add_button(TexturedButton(lambda: (), 0, 0, 10, 0, 5, 5))
+        self.gui.add_button(TexturedButton(lambda: (), 6, 0, 15, 0, 5, 5))
+
+        # Pen size gui items
+        self.gui.add_text(Label("Pen Size:", 0, 10, 7))
+        self._gui_pen_label = Label(str(self.pen_size), 11, 18, 7)
         self.gui.add_button(
             TexturedButton(lambda: self._set_pen_size(self.pen_size - 1),
-                           0, 10, 5, 0, 5, 5))
+                           0, 18, 5, 0, 5, 5))
         self.gui.add_text(self._gui_pen_label)
         self.gui.add_button(
             TexturedButton(lambda: self._set_pen_size(self.pen_size + 1),
-                           20, 10, 0, 0, 5, 5))
+                           20, 18, 0, 0, 5, 5))
 
+        # Particle gui items
         self.gui.add_text(Label("Particles: ", 0, 26, 7))
         self._gui_sand_button = TexturedButton(
                             lambda: self._set_current_particle(SandParticle),
