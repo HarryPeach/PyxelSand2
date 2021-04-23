@@ -80,6 +80,6 @@ class Gui():
 
             start_x: int = button.x + self.start_x
             start_y: int = button.y + self.start_y
-            if (x > start_x) and (x < start_x + button.width) and (y > start_y) \
+            if (x >= start_x) and (x < start_x + button.width) and (y >= start_y) \
                and (y < start_y + button.height):
                 button.action()
