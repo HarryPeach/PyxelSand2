@@ -25,7 +25,23 @@ class Particle(ABC):
         pass
 
     def fill_space(self, x: int, y: int, canvas: CanvasController) -> None:
-        pass
+        if y == canvas.height - 1:
+            return
+
+        if canvas.get(x, y + 1) is None:  # If there is no particle below
+            canvas.set(x, y + 1, canvas.get(x, y))
+            canvas.set(x, y, None)
+            return
+
+        dx_choice = random.choice([-1, 1])
+
+        # Make sure the particles don't leave the canvas
+        if (x + dx_choice) >= canvas.width or (x + dx_choice) < 0:
+            return
+
+        if canvas.get(x + dx_choice, y) is None:
+            canvas.set(x + dx_choice, y, canvas.get(x, y))
+            canvas.set(x, y, None)
 
     def fall(self, x: int, y: int, canvas: CanvasController) -> None:
         """Simulates the particle falling

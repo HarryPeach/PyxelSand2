@@ -12,4 +12,5 @@ class WaterParticle(Particle):
 
     def update(self, x: int, y: int, canvas: CanvasController) -> None:
         self.updated = True
+        self.fill_space(x, y, canvas)
         # self.fall(x, y, canvas)
