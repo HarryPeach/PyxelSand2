@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysand2"
-version = "2.0"
+version = "2.1"
 description = "Python Falling Sand Game - Second Attempt"
 authors = ["Harry Peach"]
 license = "All Rights Reserved"
