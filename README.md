@@ -17,7 +17,7 @@
 
 ## License
 
-This software is licensed under the GPLv3 license:
+This software is licensed under the GPLv3 license. The full license can be found in the LICENSE file.
 
 ```
 Copyright (C) 2021  Harry Peach
