@@ -11,7 +11,7 @@ import pyxel
 
 
 class SandGame:
-    def __init__(self):
+    def __init__(self) -> None:
         pyxel.init(160, 120, fps=60, caption="Sand Game")
 
         pyxel.load("assets/res.pyxres")
@@ -80,10 +80,10 @@ class SandGame:
 
         pyxel.run(self.update, self.draw)
 
-    def _set_current_particle(self, particle: Particle):
+    def _set_current_particle(self, particle: Particle) -> None:
         self.current_particle = particle
 
-    def _set_pen_size(self, new_size: int):
+    def _set_pen_size(self, new_size: int) -> None:
         if new_size < 1 or new_size > 9:
             return
         self.pen_size = new_size
@@ -95,7 +95,7 @@ class SandGame:
         self.overwrite = overwrite
 
     def place_particle(self, particle: Union[Particle, None], center_x: int,
-                       center_y: int, radius: int):
+                       center_y: int, radius: int) -> None:
         """Places particles at the given location in a circle
 
         Args:
@@ -135,7 +135,7 @@ class SandGame:
         else:
             return True
 
-    def update(self):
+    def update(self) -> None:
         """Updates all of the items in the game
         """
         if pyxel.btnp(pyxel.KEY_SPACE):
@@ -163,7 +163,7 @@ class SandGame:
         self._update_gui_items()
         self._update_particles()
 
-    def _update_gui_items(self):
+    def _update_gui_items(self) -> None:
         self._gui_pen_label.set_value(str(self.pen_size))
 
         self._gui_sand_button.set_enabled(
@@ -182,7 +182,7 @@ class SandGame:
         self._gui_overwrite_button_enable.set_hidden(self.overwrite)
         self._gui_overwrite_button_disable.set_hidden(not self.overwrite)
 
-    def _update_particles(self):
+    def _update_particles(self) -> None:
         if self.paused:
             return
 
@@ -204,7 +204,7 @@ class SandGame:
                 continue
             particle.updated = False
 
-    def draw(self):
+    def draw(self) -> None:
         """Draws all items in the game
         """
         pyxel.cls(1)

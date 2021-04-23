@@ -6,10 +6,10 @@ from sand_game.particles.Particle import Particle
 
 
 class WaterParticle(Particle):
-    def __init__(self):
+    def __init__(self) -> None:
         self.updated = False
         self.color = 5
 
-    def update(self, x: int, y: int, canvas: CanvasController):
+    def update(self, x: int, y: int, canvas: CanvasController) -> None:
         self.updated = True
         # self.fall(x, y, canvas)

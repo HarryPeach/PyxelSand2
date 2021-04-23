@@ -15,7 +15,7 @@ class CanvasController():
         self.height = height
         self.data = [None] * width * height
 
-    def clear(self):
+    def clear(self) -> None:
         """Clears the canvas
         """
         for i in range(0, len(self.data)):
