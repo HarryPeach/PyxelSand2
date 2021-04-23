@@ -1,3 +1,4 @@
+from sand_game.particles.FireParticle import FireParticle
 from sand_game.particles.WaterParticle import WaterParticle
 from sand_game.particles.SandParticle import SandParticle
 from sand_game.particles.WallParticle import WallParticle
@@ -23,10 +24,6 @@ class SandGame:
 
         self.canvas_controller = CanvasController(
             self.canvas_width, self.canvas_height)
-
-        # TODO: REMOVE DEBUG LAG FUNC
-        for i in range(0, len(self.canvas_controller.data)):
-            self.canvas_controller.data[i] = SandParticle()
 
         self.pen_size = 2
         self.paused = False
@@ -85,6 +82,12 @@ class SandGame:
             0, 40, 0, 15, 15, 5, tooltip="Water"
         )
         self.gui.add_button(self._gui_water_button)
+
+        self._gui_fire_button = TexturedButton(
+            lambda: self._set_current_particle(FireParticle),
+            16, 40, 0, 20, 15, 5, tooltip="Fire"
+        )
+        self.gui.add_button(self._gui_fire_button)
 
         pyxel.run(self.update, self.draw)
 
@@ -182,6 +185,9 @@ class SandGame:
         )
         self._gui_water_button.set_enabled(
             self.current_particle == WaterParticle
+        )
+        self._gui_fire_button.set_enabled(
+            self.current_particle == FireParticle
         )
 
         self._gui_pause_button.set_hidden(self.paused)
