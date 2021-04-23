@@ -1,3 +1,7 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from sand_game.particles.Particle import Particle
 from expects.matchers.built_in import be_none
 from sand_game.canvas import CanvasController
 from sand_game.particles.SandParticle import SandParticle
@@ -8,6 +12,24 @@ from expects import expect, equal, be
 class TestCanvas():
     """Tests the Canvas classes and functions
     """
+
+    def _util_check_only_particle(self, points: list[tuple[int, int]],
+                                  chk_particle: Particle, canvas: CanvasController):
+        """Check that the given particle exists at the given locations and that every
+        other location is empty
+
+        Args:
+            points (list[tuple[int, int]]): The points to check
+            chk_particle (Particle): The particle to check
+            canvas (CanvasController): The canvas to check through
+        """
+        for x in range(0, canvas.width):
+            for y in range(0, canvas.height):
+                particle = canvas.get(x, y)
+                if (x, y) in points:
+                    expect(particle).to(be(chk_particle))
+                else:
+                    expect(particle).to(be_none)
 
     def test_canvas_creation(self):
         """Tests that a canvas is successfully created
@@ -30,15 +52,8 @@ class TestCanvas():
         canvas.data[4] = sp
         canvas.data[7] = sp
 
-        for x in range(0, 3):
-            for y in range(0, 3):
-                particle = canvas.get(x, y)
-                if (x == 1 and y == 1) or (x == 1 and y == 2):
-                    expect(particle).to(be(sp))
-                else:
-                    expect(particle).to(be_none)
+        self._util_check_only_particle([(1, 1), (1, 2)], sp, canvas)
 
-    # TODO (Harry): Refactor - Cognitive Complexity
     def test_canvas_set(self):
         """Test the set function correctly sets the particle in a specific location
         """
@@ -49,25 +64,13 @@ class TestCanvas():
         canvas.set(1, 1, sp)
         canvas.set(2, 2, sp)
 
-        for x in range(0, 4):
-            for y in range(0, 4):
-                particle = canvas.get(x, y)
-                if (x, y) == (1, 1) or (x, y) == (2, 2):
-                    expect(particle).to(be(sp))
-                else:
-                    expect(particle).to(be_none)
+        self._util_check_only_particle([(1, 1), (2, 2)], sp, canvas)
 
         canvas.set(1, 1, None)
         canvas.set(2, 2, None)
         canvas.set(3, 1, sp)
 
-        for x in range(0, 4):
-            for y in range(0, 4):
-                particle = canvas.get(x, y)
-                if (x == 3 and y == 1):
-                    expect(particle).to(be(sp))
-                else:
-                    expect(particle).to(be_none)
+        self._util_check_only_particle([(3, 1)], sp, canvas)
 
     def test_canvas_clear(self):
         """Tests that a canvas is correctly cleared
