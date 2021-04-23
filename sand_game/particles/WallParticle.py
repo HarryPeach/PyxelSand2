@@ -6,11 +6,11 @@ from sand_game.particles.Particle import Particle
 
 
 class WallParticle(Particle):
-    def __init__(self) -> None:
+    def __init__(self):
         self.updated = False
         self.color = 13
 
-    def update(self, x: int, y: int, canvas: CanvasController) -> None:
+    def update(self, x: int, y: int, canvas: CanvasController):
         """Called when the particle must update its state
 
         Args:

@@ -7,7 +7,7 @@ class TexturedButton():
     file
     """
     def __init__(self, action: Callable, x: int, y: int, u: int, v: int, width: int,
-                 height: int, enabled: bool = False, hidden: bool = False) -> None:
+                 height: int, enabled: bool = False, hidden: bool = False):
         """Create the button
 
         Args:
@@ -42,7 +42,7 @@ class TexturedButton():
 class Label():
     """A GUI component that represents a string to be drawn
     """
-    def __init__(self, value: str, x: int, y: int, color: int) -> None:
+    def __init__(self, value: str, x: int, y: int, color: int):
         """Create the Label
 
         Args:
@@ -115,7 +115,7 @@ class Gui():
         """
         self.texts.append(text)
 
-    def handle_click(self, x: int, y: int) -> None:
+    def handle_click(self, x: int, y: int):
         """Handles clicks and activates buttons if required
 
         Args:

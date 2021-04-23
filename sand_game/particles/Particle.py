@@ -9,12 +9,12 @@ import random
 
 class Particle(ABC):
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.updated = False
         self.color = 0
 
     @abstractmethod
-    def update(self, x: int, y: int, canvas: CanvasController) -> None:
+    def update(self, x: int, y: int, canvas: CanvasController):
         """Called when the particle must update its state
 
         Args:
@@ -24,26 +24,7 @@ class Particle(ABC):
         """
         pass
 
-    def fill_space(self, x: int, y: int, canvas: CanvasController) -> None:
-        if y == canvas.height - 1:
-            return
-
-        if canvas.get(x, y + 1) is None:  # If there is no particle below
-            canvas.set(x, y + 1, canvas.get(x, y))
-            canvas.set(x, y, None)
-            return
-
-        dx_choice = random.choice([-1, 1])
-
-        # Make sure the particles don't leave the canvas
-        if (x + dx_choice) >= canvas.width or (x + dx_choice) < 0:
-            return
-
-        if canvas.get(x + dx_choice, y) is None:
-            canvas.set(x + dx_choice, y, canvas.get(x, y))
-            canvas.set(x, y, None)
-
-    def fall(self, x: int, y: int, canvas: CanvasController) -> None:
+    def fall(self, x: int, y: int, canvas: CanvasController):
         """Simulates the particle falling
 
         Args:
