@@ -26,6 +26,7 @@ class EmberParticle(Particle):
         self.updated = True
         self.fall(x, y, canvas)
 
+        # Random chance to spread based on the burnability of the current object
         if randint(0, self.max_tick) == 1:
             for loc in [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]:
                 particle = canvas.get(loc[0], loc[1])

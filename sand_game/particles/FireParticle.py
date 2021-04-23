@@ -25,6 +25,7 @@ class FireParticle(Particle):
         self.tick = self.tick + 1
         self.fall(x, y, canvas, direction=-1, fill_space=True)
 
+        # Check particles around for flammability
         for loc in [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]:
             particle = canvas.get(loc[0], loc[1])
             if particle is None:
