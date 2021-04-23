@@ -40,7 +40,7 @@ class Particle(ABC):
             direction (int): The direction in which the particle should fall, 1 for down
             and -1 for up
         """
-        if y == canvas.height - 1:
+        if y == canvas.height - direction:
             return
 
         if canvas.get(x, y + direction) is None:  # If there is no particle below
