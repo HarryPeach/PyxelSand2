@@ -5,17 +5,12 @@ if TYPE_CHECKING:
 from sand_game.particles.Particle import Particle
 
 
-class WallParticle(Particle):
+class WaterParticle(Particle):
     def __init__(self) -> None:
         self.updated = False
-        self.color = 13
+        self.color = 5
 
     def update(self, x: int, y: int, canvas: CanvasController) -> None:
-        """Called when the particle must update its state
-
-        Args:
-            x (int): The current x location of the particle
-            y (int): The current y location of the particle
-            canvas (CanvasController): The current canvas' controller
-        """
         self.updated = True
+        self.fill_space(x, y, canvas)
+        # self.fall(x, y, canvas)
