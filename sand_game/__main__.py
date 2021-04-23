@@ -1,3 +1,4 @@
+from sand_game.particles.WaterParticle import WaterParticle
 from sand_game.particles.SandParticle import SandParticle
 from sand_game.particles.WallParticle import WallParticle
 from sand_game.particles.Particle import Particle
@@ -71,6 +72,11 @@ class SandGame:
             16, 34, 0, 10, 15, 5
         )
         self.gui.add_button(self._gui_wall_button)
+        self._gui_water_button = TexturedButton(
+            lambda: self._set_current_particle(WaterParticle),
+            0, 40, 0, 15, 15, 5
+        )
+        self.gui.add_button(self._gui_water_button)
 
         pyxel.run(self.update, self.draw)
 
@@ -161,9 +167,13 @@ class SandGame:
         self._gui_pen_label.set_value(str(self.pen_size))
 
         self._gui_sand_button.set_enabled(
-            self.current_particle == SandParticle)
+            self.current_particle == SandParticle
+        )
         self._gui_wall_button.set_enabled(
             self.current_particle == WallParticle
+        )
+        self._gui_water_button.set_enabled(
+            self.current_particle == WaterParticle
         )
 
         self._gui_pause_button.set_hidden(self.paused)
