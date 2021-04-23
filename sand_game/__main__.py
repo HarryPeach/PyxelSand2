@@ -32,22 +32,25 @@ class SandGame:
         self.gui = Gui(114, 10)
 
         self._gui_pause_button = TexturedButton(lambda: self._set_paused(True), 0, 0,
-                                                10, 0, 5, 5)
+                                                10, 0, 5, 5, tooltip="Pause")
         self.gui.add_button(self._gui_pause_button)
         self._gui_play_button = TexturedButton(lambda: self._set_paused(False), 0, 0,
-                                               15, 0, 5, 5, hidden=True)
+                                               15, 0, 5, 5, hidden=True,
+                                               tooltip="Resume")
         self.gui.add_button(self._gui_play_button)
 
         self.gui.add_button(TexturedButton(lambda: self.canvas_controller.clear(), 6,
-                                           0, 20, 0, 5, 5))
+                                           0, 20, 0, 5, 5, tooltip="Clear"))
 
         self._gui_overwrite_button_enable = TexturedButton(
-            lambda: self._set_overwrite(True), 12, 0, 30, 0, 5, 5
+            lambda: self._set_overwrite(True), 12, 0, 30, 0, 5, 5,
+            tooltip="Overwrite"
         )
         self.gui.add_button(self._gui_overwrite_button_enable)
 
         self._gui_overwrite_button_disable = TexturedButton(
-            lambda: self._set_overwrite(False), 12, 0, 25, 0, 5, 5, hidden=True
+            lambda: self._set_overwrite(False), 12, 0, 25, 0, 5, 5, hidden=True,
+            tooltip="Overwrite"
         )
         self.gui.add_button(self._gui_overwrite_button_disable)
 
@@ -56,26 +59,26 @@ class SandGame:
         self._gui_pen_label = Label(str(self.pen_size), 11, 18, 7)
         self.gui.add_button(
             TexturedButton(lambda: self._set_pen_size(self.pen_size - 1),
-                           0, 18, 5, 0, 5, 5))
+                           0, 18, 5, 0, 5, 5, tooltip="Pen --"))
         self.gui.add_label(self._gui_pen_label)
         self.gui.add_button(
             TexturedButton(lambda: self._set_pen_size(self.pen_size + 1),
-                           20, 18, 0, 0, 5, 5))
+                           20, 18, 0, 0, 5, 5, tooltip="Pen ++"))
 
         # Particle gui items
         self.gui.add_label(Label("Particles: ", 0, 26, 7))
         self._gui_sand_button = TexturedButton(
             lambda: self._set_current_particle(SandParticle),
-            0, 34, 0, 5, 15, 5)
+            0, 34, 0, 5, 15, 5, tooltip="Sand")
         self.gui.add_button(self._gui_sand_button)
         self._gui_wall_button = TexturedButton(
             lambda: self._set_current_particle(WallParticle),
-            16, 34, 0, 10, 15, 5
+            16, 34, 0, 10, 15, 5, tooltip="Wall"
         )
         self.gui.add_button(self._gui_wall_button)
         self._gui_water_button = TexturedButton(
             lambda: self._set_current_particle(WaterParticle),
-            0, 40, 0, 15, 15, 5
+            0, 40, 0, 15, 15, 5, tooltip="Water"
         )
         self.gui.add_button(self._gui_water_button)
 
@@ -226,6 +229,7 @@ class SandGame:
                         y + self.canvas_start_loc[1], 1, 1, particle.color)
 
         self.gui.draw()
+        self.gui.handle_hover(pyxel.mouse_x, pyxel.mouse_y)
         draw_cursor(self.pen_size - 1, 7)
 
 
