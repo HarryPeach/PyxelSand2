@@ -50,18 +50,18 @@ class SandGame:
         self.gui.add_button(self._gui_overwrite_button_disable)
 
         # Pen size gui items
-        self.gui.add_text(Label("Pen Size:", 0, 10, 7))
+        self.gui.add_label(Label("Pen Size:", 0, 10, 7))
         self._gui_pen_label = Label(str(self.pen_size), 11, 18, 7)
         self.gui.add_button(
             TexturedButton(lambda: self._set_pen_size(self.pen_size - 1),
                            0, 18, 5, 0, 5, 5))
-        self.gui.add_text(self._gui_pen_label)
+        self.gui.add_label(self._gui_pen_label)
         self.gui.add_button(
             TexturedButton(lambda: self._set_pen_size(self.pen_size + 1),
                            20, 18, 0, 0, 5, 5))
 
         # Particle gui items
-        self.gui.add_text(Label("Particles: ", 0, 26, 7))
+        self.gui.add_label(Label("Particles: ", 0, 26, 7))
         self._gui_sand_button = TexturedButton(
             lambda: self._set_current_particle(SandParticle),
             0, 34, 0, 5, 15, 5)
@@ -88,8 +88,8 @@ class SandGame:
     def _set_overwrite(self, overwrite: bool) -> None:
         self.overwrite = overwrite
 
-    def _place_particle(self, particle: Union[Particle, None], center_x: int,
-                        center_y: int, radius: int):
+    def place_particle(self, particle: Union[Particle, None], center_x: int,
+                       center_y: int, radius: int):
         """Places particles at the given location in a circle
 
         Args:
@@ -130,6 +130,8 @@ class SandGame:
             return True
 
     def update(self):
+        """Updates all of the items in the game
+        """
         if pyxel.btnp(pyxel.KEY_SPACE):
             self._set_paused(not self.paused)
 
@@ -137,13 +139,13 @@ class SandGame:
             self.gui.handle_click(pyxel.mouse_x, pyxel.mouse_y)
 
         if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
-            self._place_particle(self.current_particle, pyxel.mouse_x -
-                                 self.canvas_start_loc[0],
-                                 pyxel.mouse_y - self.canvas_start_loc[1],
-                                 self.pen_size)
+            self.place_particle(self.current_particle, pyxel.mouse_x -
+                                self.canvas_start_loc[0],
+                                pyxel.mouse_y - self.canvas_start_loc[1],
+                                self.pen_size)
 
         if pyxel.btn(pyxel.MOUSE_RIGHT_BUTTON):
-            self._place_particle(
+            self.place_particle(
                 None, pyxel.mouse_x - self.canvas_start_loc[0],
                 pyxel.mouse_y - self.canvas_start_loc[1], self.pen_size)
 
@@ -193,6 +195,8 @@ class SandGame:
             particle.updated = False
 
     def draw(self):
+        """Draws all items in the game
+        """
         pyxel.cls(1)
 
         pyxel.text(10, 2, "Sand Game v2", 7)
@@ -200,6 +204,8 @@ class SandGame:
                    self.canvas_width + 2, self.canvas_height + 2, 8)
         pyxel.rect(self.canvas_start_loc[0], self.canvas_start_loc[1],
                    self.canvas_width, self.canvas_height, 0)
+
+        # Draw every particle
         for x in range(self.canvas_width):
             for y in range(self.canvas_height):
                 particle = self.canvas_controller.get(x, y)
