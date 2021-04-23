@@ -24,6 +24,10 @@ class SandGame:
         self.canvas_controller = CanvasController(
             self.canvas_width, self.canvas_height)
 
+        # TODO: REMOVE DEBUG LAG FUNC
+        for i in range(0, len(self.canvas_controller.data)):
+            self.canvas_controller.data[i] = SandParticle()
+
         self.pen_size = 2
         self.paused = False
         self.current_particle = SandParticle
@@ -224,9 +228,10 @@ class SandGame:
             for y in range(self.canvas_height):
                 particle = self.canvas_controller.get(x, y)
                 if particle is not None:
-                    pyxel.rect(
-                        x + self.canvas_start_loc[0],
-                        y + self.canvas_start_loc[1], 1, 1, particle.color)
+                    pyxel.pset(
+                        x + self.canvas_start_loc[0], y + self.canvas_start_loc[1],
+                        particle.color
+                    )
 
         self.gui.draw()
         self.gui.handle_hover(pyxel.mouse_x, pyxel.mouse_y)
