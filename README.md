@@ -13,4 +13,4 @@
 ## How to play
 - **Left click** places the currently selected particle
 - **Right click** removes particles under the cursor
-- **Space** pauses are resumes the simulation
+- **Space** pauses and resumes the simulation
