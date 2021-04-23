@@ -66,7 +66,7 @@ class SandGame:
         self.gui.add_label(Label("Particles: ", 0, 26, 7))
         self._gui_sand_button = TexturedButton(
             lambda: self._set_current_particle(SandParticle),
-            0, 34, 0, 5, 15, 5)
+            0, 34, 0, 5, 15, 5, tooltip="Sand")
         self.gui.add_button(self._gui_sand_button)
         self._gui_wall_button = TexturedButton(
             lambda: self._set_current_particle(WallParticle),
@@ -226,6 +226,7 @@ class SandGame:
                         y + self.canvas_start_loc[1], 1, 1, particle.color)
 
         self.gui.draw()
+        self.gui.handle_hover(pyxel.mouse_x, pyxel.mouse_y)
         draw_cursor(self.pen_size - 1, 7)
 
 

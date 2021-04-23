@@ -7,7 +7,8 @@ class TexturedButton():
     file
     """
     def __init__(self, action: Callable, x: int, y: int, u: int, v: int, width: int,
-                 height: int, enabled: bool = False, hidden: bool = False) -> None:
+                 height: int, tooltip: str = "", enabled: bool = False,
+                 hidden: bool = False) -> None:
         """Create the button
 
         Args:
@@ -18,6 +19,7 @@ class TexturedButton():
             v (int): The v-value of the texture
             width (int): The width of the button
             height (int): The height of the button
+            tooltip (str): The tooltip, describing the button
             enabled (bool, optional): Whether the button is enabled. Defaults to False.
             hidden (bool, optional): Whether the button should be rendered and checked
             for clicks. Defaults to False.
@@ -29,6 +31,7 @@ class TexturedButton():
         self.v = v
         self.width = width
         self.height = height
+        self.tooltip = tooltip
         self.enabled = enabled
         self.hidden = hidden
 
@@ -114,6 +117,23 @@ class Gui():
             text (Label): The label object to be added
         """
         self.texts.append(text)
+
+    def handle_hover(self, x: int, y: int) -> None:
+        """Handles hover events and draws tooltips if necessary
+
+        Args:
+            x (int): The x-coordinate of the mouse
+            y (int): The y-coordinate of the mouse
+        """
+        for button in self.buttons:
+            if button.hidden:
+                continue
+
+            start_x: int = button.x + self.start_x
+            start_y: int = button.y + self.start_y
+            if (x >= start_x) and (x < start_x + button.width) and (y >= start_y) \
+               and (y < start_y + button.height):
+                pyxel.text(self.start_x, self.start_y + 100, button.tooltip, 7)
 
     def handle_click(self, x: int, y: int) -> None:
         """Handles clicks and activates buttons if required
