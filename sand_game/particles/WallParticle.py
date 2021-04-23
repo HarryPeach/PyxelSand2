@@ -8,6 +8,7 @@ from sand_game.particles.Particle import Particle
 class WallParticle(Particle):
     def __init__(self) -> None:
         self.updated = False
+        self.burntime = -1
         self.color = 13
 
     def update(self, x: int, y: int, canvas: CanvasController) -> None:

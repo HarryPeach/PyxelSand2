@@ -11,6 +11,7 @@ class Particle(ABC):
 
     def __init__(self) -> None:
         self.updated = False
+        self.burntime = -1
         self.color = 0
 
     @abstractmethod
