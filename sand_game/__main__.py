@@ -7,12 +7,13 @@ from sand_game.draw_utils import draw_cursor
 from sand_game.gui import Gui, TexturedButton, Label
 from typing import Union
 from itertools import product
+from sand_game import __version__
 import pyxel
 
 
 class SandGame:
     def __init__(self) -> None:
-        pyxel.init(160, 120, fps=60, caption="Sand Game")
+        pyxel.init(160, 120, fps=60, caption=f"Sand Game {__version__}")
 
         pyxel.load("assets/res.pyxres")
 
@@ -209,7 +210,7 @@ class SandGame:
         """
         pyxel.cls(1)
 
-        pyxel.text(10, 2, "Sand Game v2", 7)
+        pyxel.text(10, 2, f"Sand Game v{__version__}", 7)
         pyxel.rect(self.canvas_start_loc[0] - 1, self.canvas_start_loc[1] - 1,
                    self.canvas_width + 2, self.canvas_height + 2, 8)
         pyxel.rect(self.canvas_start_loc[0], self.canvas_start_loc[1],

@@ -24,6 +24,8 @@ class Particle(ABC):
         """
         pass
 
+    # TODO (Harry): Find way to reduce code duplication between fill_space and fall
+
     def fill_space(self, x: int, y: int, canvas: CanvasController) -> None:
         if y == canvas.height - 1:
             return
