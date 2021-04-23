@@ -52,7 +52,7 @@ class TestSandGame():
         game.canvas_controller.set(10, 10, SandParticle())
 
         game.overwrite = False
-        game._place_particle(WallParticle, 10, 10, 4)
+        game.place_particle(WallParticle, 10, 10, 4)
 
         expect(game.canvas_controller.get(10, 10)).to(be_a(SandParticle))
         expect(game.canvas_controller.get(10, 9)).to(be_a(WallParticle))
@@ -61,5 +61,5 @@ class TestSandGame():
         expect(game.canvas_controller.get(11, 10)).to(be_a(WallParticle))
 
         game.overwrite = True
-        game._place_particle(WallParticle, 10, 10, 4)
+        game.place_particle(WallParticle, 10, 10, 4)
         expect(game.canvas_controller.get(10, 10)).to(be_a(WallParticle))
