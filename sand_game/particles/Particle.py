@@ -9,10 +9,10 @@ import random
 
 class Particle(ABC):
 
-    def __init__(self) -> None:
-        self.updated = False
-        self.burntime = -1
-        self.color = 0
+    def __init__(self, color: int, burntime: int = -1, updated: bool = False) -> None:
+        self.updated = updated
+        self.burntime = burntime
+        self.color = color
 
     @abstractmethod
     def update(self, x: int, y: int, canvas: CanvasController) -> None:
