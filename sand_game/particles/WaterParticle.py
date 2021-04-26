@@ -7,7 +7,7 @@ from sand_game.particles.Particle import Particle
 
 class WaterParticle(Particle):
     def __init__(self) -> None:
-        super.__init__(color=5)
+        super().__init__(color=5)
 
     def update(self, x: int, y: int, canvas: CanvasController) -> None:
         self.updated = True

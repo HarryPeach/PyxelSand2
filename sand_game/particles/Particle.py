@@ -23,7 +23,7 @@ class Particle(ABC):
             y (int): The current y location of the particle
             canvas (CanvasController): The current canvas' controller
         """
-        pass
+        self.updated = True
 
     def fill_space(self, x: int, y: int, canvas: CanvasController) -> None:
         self.fall(x, y, canvas, fill_space=True)
