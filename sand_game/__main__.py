@@ -1,3 +1,4 @@
+from sand_game.particles.AcidParticle import AcidParticle
 from sand_game.particles.FireParticle import FireParticle
 from sand_game.particles.WaterParticle import WaterParticle
 from sand_game.particles.SandParticle import SandParticle
@@ -88,6 +89,12 @@ class SandGame:
             16, 40, 0, 20, 15, 5, tooltip="Fire"
         )
         self.gui.add_button(self._gui_fire_button)
+
+        self._gui_acid_button = TexturedButton(
+            lambda: self._set_current_particle(AcidParticle),
+            0, 46, 0, 25, 15, 5, tooltip="Acid"
+        )
+        self.gui.add_button(self._gui_acid_button)
 
         pyxel.run(self.update, self.draw)
 
@@ -188,6 +195,9 @@ class SandGame:
         )
         self._gui_fire_button.set_enabled(
             self.current_particle == FireParticle
+        )
+        self._gui_acid_button.set_enabled(
+            self.current_particle == AcidParticle
         )
 
         self._gui_pause_button.set_hidden(self.paused)
