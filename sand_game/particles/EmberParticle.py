@@ -13,11 +13,9 @@ class EmberParticle(Particle):
         Args:
             max_tick (int): The amount of time to burn for before disappearing
         """
-        self.updated = False
-        self.burntime = -1
+        super().__init__(color=14)
         self.tick = 0
         self.max_tick = max_tick
-        self.color = 14
 
     def update(self, x: int, y: int, canvas: CanvasController) -> None:
         from sand_game.particles.FireParticle import FireParticle

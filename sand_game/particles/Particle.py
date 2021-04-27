@@ -9,10 +9,10 @@ import random
 
 class Particle(ABC):
 
-    def __init__(self) -> None:
-        self.updated = False
-        self.burntime = -1
-        self.color = 0
+    def __init__(self, color: int, burntime: int = -1, updated: bool = False) -> None:
+        self.updated = updated
+        self.burntime = burntime
+        self.color = color
 
     @abstractmethod
     def update(self, x: int, y: int, canvas: CanvasController) -> None:
@@ -23,7 +23,7 @@ class Particle(ABC):
             y (int): The current y location of the particle
             canvas (CanvasController): The current canvas' controller
         """
-        pass
+        self.updated = True
 
     def fill_space(self, x: int, y: int, canvas: CanvasController) -> None:
         self.fall(x, y, canvas, fill_space=True)

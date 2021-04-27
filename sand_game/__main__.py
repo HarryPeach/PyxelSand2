@@ -1,3 +1,4 @@
+from sand_game.particles.AcidParticle import AcidParticle
 from sand_game.particles.FireParticle import FireParticle
 from sand_game.particles.WaterParticle import WaterParticle
 from sand_game.particles.SandParticle import SandParticle
@@ -14,13 +15,13 @@ import pyxel
 
 class SandGame:
     def __init__(self) -> None:
-        pyxel.init(160, 120, fps=60, caption=f"Sand Game {__version__}")
+        pyxel.init(160, 120, fps=60, caption=f"Sand Game v{__version__}")
 
         pyxel.load("assets/res.pyxres")
 
         self.canvas_width = 100
         self.canvas_height = 100
-        self.canvas_start_loc = (10, 10)
+        self.canvas_start_loc = (8, 14)
 
         self.canvas_controller = CanvasController(
             self.canvas_width, self.canvas_height)
@@ -30,7 +31,7 @@ class SandGame:
         self.current_particle = SandParticle
         self.overwrite = False
 
-        self.gui = Gui(114, 10)
+        self.gui = Gui(114, 14)
 
         self._gui_pause_button = TexturedButton(lambda: self._set_paused(True), 0, 0,
                                                 10, 0, 5, 5, tooltip="Pause")
@@ -88,6 +89,12 @@ class SandGame:
             16, 40, 0, 20, 15, 5, tooltip="Fire"
         )
         self.gui.add_button(self._gui_fire_button)
+
+        self._gui_acid_button = TexturedButton(
+            lambda: self._set_current_particle(AcidParticle),
+            0, 46, 0, 25, 15, 5, tooltip="Acid"
+        )
+        self.gui.add_button(self._gui_acid_button)
 
         pyxel.run(self.update, self.draw)
 
@@ -189,6 +196,9 @@ class SandGame:
         self._gui_fire_button.set_enabled(
             self.current_particle == FireParticle
         )
+        self._gui_acid_button.set_enabled(
+            self.current_particle == AcidParticle
+        )
 
         self._gui_pause_button.set_hidden(self.paused)
         self._gui_play_button.set_hidden(not self.paused)
@@ -223,7 +233,7 @@ class SandGame:
         """
         pyxel.cls(1)
 
-        pyxel.text(10, 2, f"Sand Game v{__version__}", 7)
+        pyxel.text(8, 5, f"Sand Game v{__version__}", 7)
         pyxel.rect(self.canvas_start_loc[0] - 1, self.canvas_start_loc[1] - 1,
                    self.canvas_width + 2, self.canvas_height + 2, 8)
         pyxel.rect(self.canvas_start_loc[0], self.canvas_start_loc[1],

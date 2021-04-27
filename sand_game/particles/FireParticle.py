@@ -11,10 +11,8 @@ from random import randint
 class FireParticle(Particle):
 
     def __init__(self) -> None:
-        self.updated = False
-        self.color = 8
+        super().__init__(color=8)
         self.tick = 0
-        self.burntime = -1
         self.max_tick = randint(0, 30)
 
     def update(self, x: int, y: int, canvas: CanvasController) -> None:
