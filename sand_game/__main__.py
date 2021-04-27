@@ -56,6 +56,18 @@ class SandGame:
         )
         self.gui.add_button(self._gui_overwrite_button_disable)
 
+        self._gui_import_button = TexturedButton(
+            lambda: print("Import"), 18, 0, 35, 0, 5, 5,
+            tooltip="Import"
+        )
+        self.gui.add_button(self._gui_import_button)
+
+        self._gui_import_button = TexturedButton(
+            lambda: print("Export"), 24, 0, 40, 0, 5, 5,
+            tooltip="Export"
+        )
+        self.gui.add_button(self._gui_import_button)
+
         # Pen size gui items
         self.gui.add_label(Label("Pen Size:", 0, 10, 7))
         self._gui_pen_label = Label(str(self.pen_size), 11, 18, 7)

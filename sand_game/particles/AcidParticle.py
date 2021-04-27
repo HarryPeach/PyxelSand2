@@ -1,10 +1,8 @@
 from __future__ import annotations
-from sand_game.particles.EmberParticle import EmberParticle
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from sand_game.canvas import CanvasController
 from sand_game.particles.Particle import Particle
-from sand_game.particles.WaterParticle import WaterParticle
 from random import randint
 
 

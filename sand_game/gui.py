@@ -133,7 +133,7 @@ class Gui():
             start_y: int = button.y + self.start_y
             if (x >= start_x) and (x < start_x + button.width) and (y >= start_y) \
                and (y < start_y + button.height):
-                pyxel.text(self.start_x, self.start_y + 100, button.tooltip, 7)
+                pyxel.text(self.start_x, self.start_y + 94, button.tooltip, 7)
 
     def handle_click(self, x: int, y: int) -> None:
         """Handles clicks and activates buttons if required
