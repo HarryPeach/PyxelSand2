@@ -1,4 +1,5 @@
 from __future__ import annotations
+from sand_game.particles.FireParticle import FireParticle
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from sand_game.particles.Particle import Particle
@@ -96,6 +97,7 @@ class TestCanvas():
         canvas1.set(5, 0, WallParticle())
         canvas1.set(8, 6, SandParticle())
         canvas1.set(5, 7, WallParticle())
+
         canvas1.save_to_file("TMP.CANVAS")
 
         canvas2 = CanvasController(5, 5)
@@ -115,4 +117,15 @@ class TestCanvas():
 
             expect(type(particle1)).to(be(type(particle2)))
 
-# TODO: Test particle attributes are saved
+    def test_load_particle_data(_):
+        """Test particle data is persisted after load
+        """
+        canvas1 = CanvasController(10, 10)
+        fp = FireParticle()
+        fp.max_tick = 5001
+        canvas1.set(1, 0, fp)
+        canvas1.save_to_file("TMP.CANVAS")
+
+        canvas2 = CanvasController(5, 5)
+        canvas2.load_from_file("TMP.CANVAS")
+        expect(canvas2.get(1, 0).max_tick).to(equal(5001))
