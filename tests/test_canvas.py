@@ -5,6 +5,7 @@ if TYPE_CHECKING:
 from expects.matchers.built_in import be_none
 from sand_game.canvas import CanvasController
 from sand_game.particles.SandParticle import SandParticle
+from sand_game.particles.WallParticle import WallParticle
 
 from expects import expect, equal, be
 
@@ -86,3 +87,32 @@ class TestCanvas():
         canvas.clear()
         for particle in canvas.data:
             expect(particle).to(be_none)
+
+    def test_save_and_load(_):
+        """Test saving and loading to a canvas
+        """
+        canvas1 = CanvasController(10, 10)
+        canvas1.set(1, 0, SandParticle())
+        canvas1.set(5, 0, WallParticle())
+        canvas1.set(8, 6, SandParticle())
+        canvas1.set(5, 7, WallParticle())
+        canvas1.save_to_file("TMP.CANVAS")
+
+        canvas2 = CanvasController(5, 5)
+        canvas2.load_from_file("TMP.CANVAS")
+
+        expect(canvas1.height).to(equal(canvas2.height))
+        expect(canvas1.width).to(equal(canvas2.width))
+        expect(len(canvas1.data)).to(equal(len(canvas2.data)))
+
+        # Check all particle types are the same
+        for pair in zip(canvas1.data, canvas2.data):
+            particle1, particle2 = pair
+
+            if particle1 is None:
+                expect(particle2).to(be_none)
+                continue
+
+            expect(type(particle1)).to(be(type(particle2)))
+
+# TODO: Test particle attributes are saved

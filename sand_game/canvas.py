@@ -5,6 +5,8 @@ from typing import Union
 
 from sand_game.particles.Particle import Particle
 
+import pickle
+
 
 class CanvasController():
     """The main controller for the game canvas, controlling the location of all
@@ -20,6 +22,25 @@ class CanvasController():
         """
         for i in range(0, len(self.data)):
             self.data[i] = None
+
+    def save_to_file(self, filename: str) -> None:
+        """Saves the canvas to a file
+
+        Args:
+            filename (str): The file to save the canvas to
+        """
+        with open(filename, "wb") as file:
+            pickle.dump([self.width, self.height, self.data], file)
+
+    def load_from_file(self, filename: str) -> None:
+        """Loads the canvas from a file
+
+        Args:
+            filename (str): The file to load the canvas from
+        """
+        with open(filename, "rb") as file:
+            depickled = pickle.load(file)
+            self.width, self.height, self.data = depickled
 
     def set(self, x: int, y: int, particle: Union[Particle, None]) -> None:
         """Sets the particle at the current location
