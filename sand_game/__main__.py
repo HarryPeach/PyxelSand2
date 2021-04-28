@@ -137,8 +137,8 @@ class SandGame:
         """Loads the current canvas from a file
         """
         filename = self.open_filepicker(False)
-        self.paused = True
         if filename != "":
+            self.paused = True
             self.canvas_controller = CanvasController.load_from_file(filename)
 
     def open_filepicker(self, new: bool = False) -> str:
@@ -154,10 +154,10 @@ class SandGame:
         result = None
 
         if new:
-            result = asksaveasfilename(initialfile="export.ps2canvas")
+            result = asksaveasfilename(initialfile="export.cnv",
+                                       filetypes=[("Compressed Canvas", ".cnv")])
         else:
-            result = askopenfilename(initialfile="import.ps2canvas",
-                                     defaultextension=".ps2canvas")
+            result = askopenfilename(initialfile="import.cnv")
 
         return result
 
