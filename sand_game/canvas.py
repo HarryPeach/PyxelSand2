@@ -47,6 +47,14 @@ class CanvasController():
 
     @staticmethod
     def _from_serialized(serial_obj: dict) -> CanvasController:
+        """Create a new CanvasController object from a serialized dict
+
+        Args:
+            serial_obj (dict): The serialized dict to create from
+
+        Returns:
+            CanvasController: The newly created object
+        """
         new_canvas = CanvasController(serial_obj["width"], serial_obj["height"])
         for i, particle_data in enumerate(serial_obj["particles"]):
             if particle_data is None:

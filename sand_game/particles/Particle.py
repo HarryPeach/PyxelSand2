@@ -35,10 +35,17 @@ class Particle(ABC):
 
     @staticmethod
     def _from_serialized(serial_obj: dict) -> Particle:
+        """Create a new particle instance from a serialized dict
+
+        Args:
+            serial_obj (dict): The dict to create the object from
+
+        Returns:
+            Particle: The newly-created Particle object
+        """
         from sand_game.particles import uuid_map
         new_particle = uuid_map[serial_obj["name"]]()
         for data_item in serial_obj["data"]:
-            # TODO: Sanitize this!
             setattr(new_particle, data_item, serial_obj["data"][data_item])
         return new_particle
 
