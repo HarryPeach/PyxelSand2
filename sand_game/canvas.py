@@ -6,6 +6,7 @@ from typing import Union
 from sand_game.particles.Particle import Particle
 
 import json
+import zlib
 
 
 class CanvasController():
@@ -71,8 +72,10 @@ class CanvasController():
         Args:
             filename (str): The file to save the canvas to
         """
-        with open(filename, "w+") as f:
-            json.dump(self._serialize(), f)
+        with open(filename, "wb") as f:
+            json_str = json.dumps(self._serialize())
+            json_str_compr = zlib.compress(json_str.encode("utf-8"))
+            f.write(json_str_compr)
 
     @staticmethod
     def load_from_file(filename: str) -> CanvasController:
@@ -82,7 +85,8 @@ class CanvasController():
             filename (str): The file to load the canvas from
         """
         with open(filename, "rb") as f:
-            serial_obj = json.load(f)
+            decomp = zlib.decompress(f.read())
+            serial_obj = json.loads(decomp.decode("utf-8"))
             return CanvasController._from_serialized(serial_obj)
 
     def set(self, x: int, y: int, particle: Union[Particle, None]) -> None:
