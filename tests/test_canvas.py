@@ -10,8 +10,13 @@ from sand_game.particles.WallParticle import WallParticle
 
 from expects import expect, equal, be
 
+import os
+import unittest
 
-class TestCanvas():
+CANVAS_TEMP_FILENAME = "tmp.json"
+
+
+class TestCanvas(unittest.TestCase):
     """Tests the Canvas classes and functions
     """
 
@@ -100,9 +105,9 @@ class TestCanvas():
         canvas1.set(8, 6, SandParticle())
         canvas1.set(5, 7, WallParticle())
 
-        canvas1.save_to_file("tmp.json")
+        canvas1.save_to_file(CANVAS_TEMP_FILENAME)
 
-        canvas2 = CanvasController.load_from_file("tmp.json")
+        canvas2 = CanvasController.load_from_file(CANVAS_TEMP_FILENAME)
 
         expect(canvas1.height).to(equal(canvas2.height))
         expect(canvas1.width).to(equal(canvas2.width))
@@ -125,8 +130,12 @@ class TestCanvas():
         fp = FireParticle()
         fp.max_tick = 5001
         canvas1.set(1, 0, fp)
-        canvas1.save_to_file("tmp.json")
+        canvas1.save_to_file(CANVAS_TEMP_FILENAME)
 
-        canvas2 = CanvasController.load_from_file("tmp.json")
+        canvas2 = CanvasController.load_from_file(CANVAS_TEMP_FILENAME)
 
         expect(canvas2.get(1, 0).max_tick).to(equal(5001))
+
+    def tearDown(self):
+        if os.path.exists(CANVAS_TEMP_FILENAME):
+            os.remove(CANVAS_TEMP_FILENAME)

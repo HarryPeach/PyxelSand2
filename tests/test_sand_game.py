@@ -1,5 +1,6 @@
 # Stop pyxel from being imported during a test as this can cause test failures due to
 # the CI test environment not supporting graphics
+import unittest
 from sand_game.particles.WallParticle import WallParticle
 import sys
 from unittest.mock import MagicMock
@@ -22,7 +23,7 @@ class SandGameTestImpl(SandGame):
         self.paused = False
 
 
-class TestSandGame():
+class TestSandGame(unittest.TestCase):
     """Tests the core game class
     """
 
