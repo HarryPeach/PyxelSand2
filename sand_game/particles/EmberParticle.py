@@ -7,6 +7,8 @@ from sand_game.particles.Particle import Particle
 
 
 class EmberParticle(Particle):
+    uuid = "ember"
+
     def __init__(self, max_tick: int) -> None:
         """Creates the ember
 

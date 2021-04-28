@@ -5,6 +5,10 @@ from typing import Union
 
 from sand_game.particles.Particle import Particle
 
+import os
+import json
+import zlib
+
 
 class CanvasController():
     """The main controller for the game canvas, controlling the location of all
@@ -20,6 +24,81 @@ class CanvasController():
         """
         for i in range(0, len(self.data)):
             self.data[i] = None
+
+    def _serialize(self) -> dict:
+        """Converts the object into a JSON dict
+
+        Returns:
+            str: The JSON form of the canvas
+        """
+        serial_obj = {
+            "width": self.width,
+            "height": self.height,
+        }
+        particles = []
+        particle: Particle
+        for particle in self.data:
+            if particle is None:
+                particles.append(particle)
+                continue
+
+            particles.append(particle._serialize())
+
+        serial_obj["particles"] = particles
+        return serial_obj
+
+    @staticmethod
+    def _from_serialized(serial_obj: dict) -> CanvasController:
+        """Create a new CanvasController object from a serialized dict
+
+        Args:
+            serial_obj (dict): The serialized dict to create from
+
+        Returns:
+            CanvasController: The newly created object
+        """
+        new_canvas = CanvasController(serial_obj["width"], serial_obj["height"])
+        for i, particle_data in enumerate(serial_obj["particles"]):
+            if particle_data is None:
+                new_canvas.data[i] = None
+                continue
+
+            new_particle = Particle._from_serialized(particle_data)
+            new_canvas.data[i] = new_particle
+        return new_canvas
+
+    def save_to_file(self, filename: str, compress: bool) -> None:
+        """Saves the canvas to a file
+
+        Args:
+            filename (str): The file to save the canvas to
+            compress (bool): Whether to compress the output file
+        """
+        if compress:
+            with open(filename, "wb") as f:
+                json_str = json.dumps(self._serialize())
+                json_str_compr = zlib.compress(json_str.encode("utf-8"))
+                f.write(json_str_compr)
+        else:
+            with open(filename, "w+") as f:
+                json.dump(self._serialize(), f)
+
+    @staticmethod
+    def load_from_file(filename: str) -> CanvasController:
+        """Loads the canvas from a file
+
+        Args:
+            filename (str): The file to load the canvas from
+        """
+        _, ext = os.path.splitext(filename)
+        with open(filename, "rb") as f:
+            if ext == ".cnv":
+                decomp = zlib.decompress(f.read())
+                serial_obj = json.loads(decomp.decode("utf-8"))
+                return CanvasController._from_serialized(serial_obj)
+            else:
+                serial_obj = json.load(f)
+                return CanvasController._from_serialized(serial_obj)
 
     def set(self, x: int, y: int, particle: Union[Particle, None]) -> None:
         """Sets the particle at the current location

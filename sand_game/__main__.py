@@ -9,8 +9,11 @@ from sand_game.draw_utils import draw_cursor
 from sand_game.gui import Gui, TexturedButton, Label
 from typing import Union
 from itertools import product
+from tkinter import Tk
+from tkinter.filedialog import asksaveasfilename, askopenfilename
 from sand_game import __version__
 import pyxel
+import os
 
 
 class SandGame:
@@ -55,6 +58,18 @@ class SandGame:
             tooltip="Overwrite"
         )
         self.gui.add_button(self._gui_overwrite_button_disable)
+
+        self._gui_import_button = TexturedButton(
+            self.import_canvas, 18, 0, 35, 0, 5, 5,
+            tooltip="Import"
+        )
+        self.gui.add_button(self._gui_import_button)
+
+        self._gui_import_button = TexturedButton(
+            self.export_canvas, 24, 0, 40, 0, 5, 5,
+            tooltip="Export"
+        )
+        self.gui.add_button(self._gui_import_button)
 
         # Pen size gui items
         self.gui.add_label(Label("Pen Size:", 0, 10, 7))
@@ -111,6 +126,47 @@ class SandGame:
 
     def _set_overwrite(self, overwrite: bool) -> None:
         self.overwrite = overwrite
+
+    def export_canvas(self) -> None:
+        """Saves the current canvas to a file
+        """
+        filename = self.open_filepicker(True)
+        if filename != "":
+            if os.path.splitext(filename)[1] == ".cnv":
+                self.canvas_controller.save_to_file(filename, True)
+            else:
+                self.canvas_controller.save_to_file(filename, False)
+
+    def import_canvas(self) -> None:
+        """Loads the current canvas from a file
+        """
+        filename = self.open_filepicker(False)
+        if filename != "":
+            self.paused = True
+            self.canvas_controller = CanvasController.load_from_file(filename)
+
+    def open_filepicker(self, new: bool = False) -> str:
+        """Opens a GUI filepicker
+
+        Args:
+            new (bool, optional): Whether the file needs to be created.
+            Defaults to False.
+
+        Returns:
+            str: The filename picked by the user, "" if cancelled.
+        """
+        result = None
+
+        if new:
+            result = asksaveasfilename(initialfile="export",
+                                       filetypes=[("Compressed Canvas", ".cnv"),
+                                                  ("JSON Canvas", ".json")],
+                                       defaultextension=".json",
+                                       title="Export canvas")
+        else:
+            result = askopenfilename(initialfile="import", title="Import canvas")
+
+        return result
 
     def place_particle(self, particle: Union[Particle, None], center_x: int,
                        center_y: int, radius: int) -> None:
@@ -255,4 +311,5 @@ class SandGame:
 
 
 if __name__ == "__main__":
+    Tk().withdraw()
     SandGame()

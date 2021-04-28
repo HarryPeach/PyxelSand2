@@ -1,15 +1,23 @@
 from __future__ import annotations
+from sand_game.particles.FireParticle import FireParticle
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from sand_game.particles.Particle import Particle
 from expects.matchers.built_in import be_none
 from sand_game.canvas import CanvasController
 from sand_game.particles.SandParticle import SandParticle
+from sand_game.particles.WallParticle import WallParticle
 
 from expects import expect, equal, be
 
+import os
+import unittest
 
-class TestCanvas():
+CANVAS_TEMP_FILENAME = "tmp.json"
+CANVAS_TEMP_FILENAME_CMP = "tmp.cnv"
+
+
+class TestCanvas(unittest.TestCase):
     """Tests the Canvas classes and functions
     """
 
@@ -86,3 +94,68 @@ class TestCanvas():
         canvas.clear()
         for particle in canvas.data:
             expect(particle).to(be_none)
+
+    def _test_save_and_load(_, compress: bool):
+        tmp_filename = CANVAS_TEMP_FILENAME_CMP if compress else CANVAS_TEMP_FILENAME
+
+        canvas1 = CanvasController(10, 10)
+        canvas1.set(1, 0, SandParticle())
+        canvas1.set(5, 0, WallParticle())
+        canvas1.set(8, 6, SandParticle())
+        canvas1.set(5, 7, WallParticle())
+
+        canvas1.save_to_file(tmp_filename, compress)
+
+        canvas2 = CanvasController.load_from_file(tmp_filename)
+
+        expect(canvas1.height).to(equal(canvas2.height))
+        expect(canvas1.width).to(equal(canvas2.width))
+        expect(len(canvas1.data)).to(equal(len(canvas2.data)))
+
+        # Check all particle types are the same
+        for pair in zip(canvas1.data, canvas2.data):
+            particle1, particle2 = pair
+
+            if particle1 is None:
+                expect(particle2).to(be_none)
+                continue
+
+            expect(type(particle1)).to(be(type(particle2)))
+
+    def test_save_and_load(self):
+        """Test saving and loading to a canvas
+        """
+        self._test_save_and_load(False)
+
+    def test_save_and_load_compressed(self):
+        """Test saving and loading to a canvas that is compressed
+        """
+        self._test_save_and_load(True)
+
+    def _test_load_particle_data(_, compress: bool):
+        tmp_filename = CANVAS_TEMP_FILENAME_CMP if compress else CANVAS_TEMP_FILENAME
+        canvas1 = CanvasController(10, 10)
+        fp = FireParticle()
+        fp.max_tick = 5001
+        canvas1.set(1, 0, fp)
+        canvas1.save_to_file(tmp_filename, compress)
+
+        canvas2 = CanvasController.load_from_file(tmp_filename)
+
+        expect(canvas2.get(1, 0).max_tick).to(equal(5001))
+
+    def test_load_particle_data(self):
+        """Test particle data is persisted after load
+        """
+        self._test_load_particle_data(False)
+
+    def test_load_particle_data_compressed(self):
+        """Test compressed particle data is persisted after load
+        """
+        self._test_load_particle_data(True)
+
+    def tearDown(self):
+        cleanup_files = [CANVAS_TEMP_FILENAME, CANVAS_TEMP_FILENAME_CMP]
+        for cleanup_file in cleanup_files:
+            if os.path.exists(cleanup_file):
+                os.remove(cleanup_file)
