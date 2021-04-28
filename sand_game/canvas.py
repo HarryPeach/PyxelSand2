@@ -5,6 +5,7 @@ from typing import Union
 
 from sand_game.particles.Particle import Particle
 
+import os
 import json
 import zlib
 
@@ -66,16 +67,21 @@ class CanvasController():
             new_canvas.data[i] = new_particle
         return new_canvas
 
-    def save_to_file(self, filename: str) -> None:
+    def save_to_file(self, filename: str, compress: bool) -> None:
         """Saves the canvas to a file
 
         Args:
             filename (str): The file to save the canvas to
+            compress (bool): Whether to compress the output file
         """
-        with open(filename, "wb") as f:
-            json_str = json.dumps(self._serialize())
-            json_str_compr = zlib.compress(json_str.encode("utf-8"))
-            f.write(json_str_compr)
+        if compress:
+            with open(filename, "wb") as f:
+                json_str = json.dumps(self._serialize())
+                json_str_compr = zlib.compress(json_str.encode("utf-8"))
+                f.write(json_str_compr)
+        else:
+            with open(filename, "w+") as f:
+                json.dump(self._serialize(), f)
 
     @staticmethod
     def load_from_file(filename: str) -> CanvasController:
@@ -84,10 +90,15 @@ class CanvasController():
         Args:
             filename (str): The file to load the canvas from
         """
+        _, ext = os.path.splitext(filename)
         with open(filename, "rb") as f:
-            decomp = zlib.decompress(f.read())
-            serial_obj = json.loads(decomp.decode("utf-8"))
-            return CanvasController._from_serialized(serial_obj)
+            if ext == ".cnv":
+                decomp = zlib.decompress(f.read())
+                serial_obj = json.loads(decomp.decode("utf-8"))
+                return CanvasController._from_serialized(serial_obj)
+            else:
+                serial_obj = json.load(f)
+                return CanvasController._from_serialized(serial_obj)
 
     def set(self, x: int, y: int, particle: Union[Particle, None]) -> None:
         """Sets the particle at the current location

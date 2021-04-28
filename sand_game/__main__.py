@@ -13,6 +13,7 @@ from tkinter import Tk
 from tkinter.filedialog import asksaveasfilename, askopenfilename
 from sand_game import __version__
 import pyxel
+import os
 
 
 class SandGame:
@@ -131,7 +132,10 @@ class SandGame:
         """
         filename = self.open_filepicker(True)
         if filename != "":
-            self.canvas_controller.save_to_file(filename)
+            if os.path.splitext(filename)[1] == ".cnv":
+                self.canvas_controller.save_to_file(filename, True)
+            else:
+                self.canvas_controller.save_to_file(filename, False)
 
     def import_canvas(self) -> None:
         """Loads the current canvas from a file
@@ -154,10 +158,13 @@ class SandGame:
         result = None
 
         if new:
-            result = asksaveasfilename(initialfile="export.cnv",
-                                       filetypes=[("Compressed Canvas", ".cnv")])
+            result = asksaveasfilename(initialfile="export",
+                                       filetypes=[("Compressed Canvas", ".cnv"),
+                                                  ("JSON Canvas", ".json")],
+                                       defaultextension=".json",
+                                       title="Export canvas")
         else:
-            result = askopenfilename(initialfile="import.cnv")
+            result = askopenfilename(initialfile="import", title="Import canvas")
 
         return result
 
