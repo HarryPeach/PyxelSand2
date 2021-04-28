@@ -14,6 +14,7 @@ import os
 import unittest
 
 CANVAS_TEMP_FILENAME = "tmp.json"
+CANVAS_TEMP_FILENAME_CMP = "tmp.cnv"
 
 
 class TestCanvas(unittest.TestCase):
@@ -94,20 +95,18 @@ class TestCanvas(unittest.TestCase):
         for particle in canvas.data:
             expect(particle).to(be_none)
 
-    # TODO: clean up created files
+    def _test_save_and_load(_, compress: bool):
+        tmp_filename = CANVAS_TEMP_FILENAME_CMP if compress else CANVAS_TEMP_FILENAME
 
-    def test_save_and_load(_):
-        """Test saving and loading to a canvas
-        """
         canvas1 = CanvasController(10, 10)
         canvas1.set(1, 0, SandParticle())
         canvas1.set(5, 0, WallParticle())
         canvas1.set(8, 6, SandParticle())
         canvas1.set(5, 7, WallParticle())
 
-        canvas1.save_to_file(CANVAS_TEMP_FILENAME)
+        canvas1.save_to_file(tmp_filename, compress)
 
-        canvas2 = CanvasController.load_from_file(CANVAS_TEMP_FILENAME)
+        canvas2 = CanvasController.load_from_file(tmp_filename)
 
         expect(canvas1.height).to(equal(canvas2.height))
         expect(canvas1.width).to(equal(canvas2.width))
@@ -123,18 +122,37 @@ class TestCanvas(unittest.TestCase):
 
             expect(type(particle1)).to(be(type(particle2)))
 
-    def test_load_particle_data(_):
-        """Test particle data is persisted after load
+    def test_save_and_load(self):
+        """Test saving and loading to a canvas
         """
+        self._test_save_and_load(False)
+
+    def test_save_and_load_compressed(self):
+        """Test saving and loading to a canvas that is compressed
+        """
+        self._test_save_and_load(True)
+
+    def _test_load_particle_data(_, compress: bool):
+        tmp_filename = CANVAS_TEMP_FILENAME_CMP if compress else CANVAS_TEMP_FILENAME
         canvas1 = CanvasController(10, 10)
         fp = FireParticle()
         fp.max_tick = 5001
         canvas1.set(1, 0, fp)
-        canvas1.save_to_file(CANVAS_TEMP_FILENAME)
+        canvas1.save_to_file(tmp_filename, compress)
 
-        canvas2 = CanvasController.load_from_file(CANVAS_TEMP_FILENAME)
+        canvas2 = CanvasController.load_from_file(tmp_filename)
 
         expect(canvas2.get(1, 0).max_tick).to(equal(5001))
+
+    def test_load_particle_data(self):
+        """Test particle data is persisted after load
+        """
+        self._test_load_particle_data(False)
+
+    def test_load_particle_data_compressed(self):
+        """Test compressed particle data is persisted after load
+        """
+        self._test_load_particle_data(True)
 
     def tearDown(self):
         if os.path.exists(CANVAS_TEMP_FILENAME):
