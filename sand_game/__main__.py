@@ -9,6 +9,8 @@ from sand_game.draw_utils import draw_cursor
 from sand_game.gui import Gui, TexturedButton, Label
 from typing import Union
 from itertools import product
+from tkinter import Tk
+from tkinter.filedialog import asksaveasfilename, askopenfilename
 from sand_game import __version__
 import pyxel
 
@@ -57,13 +59,13 @@ class SandGame:
         self.gui.add_button(self._gui_overwrite_button_disable)
 
         self._gui_import_button = TexturedButton(
-            lambda: print("Import"), 18, 0, 35, 0, 5, 5,
+            self.import_canvas, 18, 0, 35, 0, 5, 5,
             tooltip="Import"
         )
         self.gui.add_button(self._gui_import_button)
 
         self._gui_import_button = TexturedButton(
-            lambda: print("Export"), 24, 0, 40, 0, 5, 5,
+            self.export_canvas, 24, 0, 40, 0, 5, 5,
             tooltip="Export"
         )
         self.gui.add_button(self._gui_import_button)
@@ -123,6 +125,40 @@ class SandGame:
 
     def _set_overwrite(self, overwrite: bool) -> None:
         self.overwrite = overwrite
+
+    def export_canvas(self) -> None:
+        """Saves the current canvas to a file
+        """
+        filename = self.open_filepicker(True)
+        if filename != "":
+            self.canvas_controller.save_to_file(filename)
+
+    def import_canvas(self) -> None:
+        """Loads the current canvas from a file
+        """
+        filename = self.open_filepicker(False)
+        if filename != "":
+            self.canvas_controller.load_from_file(filename)
+
+    def open_filepicker(self, new: bool = False) -> str:
+        """Opens a GUI filepicker
+
+        Args:
+            new (bool, optional): Whether the file needs to be created.
+            Defaults to False.
+
+        Returns:
+            str: The filename picked by the user, "" if cancelled.
+        """
+        result = None
+
+        if new:
+            result = asksaveasfilename(initialfile="export.ps2canvas")
+        else:
+            result = askopenfilename(initialfile="import.ps2canvas",
+                                     defaultextension=".ps2canvas")
+
+        return result
 
     def place_particle(self, particle: Union[Particle, None], center_x: int,
                        center_y: int, radius: int) -> None:
@@ -267,4 +303,5 @@ class SandGame:
 
 
 if __name__ == "__main__":
+    Tk().withdraw()
     SandGame()
