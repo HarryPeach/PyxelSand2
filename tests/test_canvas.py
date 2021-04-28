@@ -89,6 +89,8 @@ class TestCanvas():
         for particle in canvas.data:
             expect(particle).to(be_none)
 
+    # TODO: clean up created files
+
     def test_save_and_load(_):
         """Test saving and loading to a canvas
         """
@@ -98,10 +100,9 @@ class TestCanvas():
         canvas1.set(8, 6, SandParticle())
         canvas1.set(5, 7, WallParticle())
 
-        canvas1.save_to_file("TMP.CANVAS")
+        canvas1.save_to_file("tmp.json")
 
-        canvas2 = CanvasController(5, 5)
-        canvas2.load_from_file("TMP.CANVAS")
+        canvas2 = CanvasController.load_from_file("tmp.json")
 
         expect(canvas1.height).to(equal(canvas2.height))
         expect(canvas1.width).to(equal(canvas2.width))
@@ -124,8 +125,8 @@ class TestCanvas():
         fp = FireParticle()
         fp.max_tick = 5001
         canvas1.set(1, 0, fp)
-        canvas1.save_to_file("TMP.CANVAS")
+        canvas1.save_to_file("tmp.json")
 
-        canvas2 = CanvasController(5, 5)
-        canvas2.load_from_file("TMP.CANVAS")
+        canvas2 = CanvasController.load_from_file("tmp.json")
+
         expect(canvas2.get(1, 0).max_tick).to(equal(5001))

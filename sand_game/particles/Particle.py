@@ -8,11 +8,39 @@ import random
 
 
 class Particle(ABC):
-
-    def __init__(self, color: int, burntime: int = -1, updated: bool = False) -> None:
+    def __init__(self, color: int, burntime: int = -1,
+                 updated: bool = False) -> None:
         self.updated = updated
         self.burntime = burntime
         self.color = color
+
+    @property
+    @abstractmethod
+    def uuid(self) -> str:
+        """The unique name of the particle
+        """
+        pass
+
+    def _serialize(self) -> dict:
+        """Converts the object into a JSON-style dict
+
+        Returns:
+            str: The dict form of the particle
+        """
+        serial_obj = {
+            "name": self.uuid,
+            "data": self.__dict__
+        }
+        return serial_obj
+
+    @staticmethod
+    def _from_serialized(serial_obj: dict) -> Particle:
+        from sand_game.particles import uuid_map
+        new_particle = uuid_map[serial_obj["name"]]()
+        for data_item in serial_obj["data"]:
+            # TODO: Sanitize this!
+            setattr(new_particle, data_item, serial_obj["data"][data_item])
+        return new_particle
 
     @abstractmethod
     def update(self, x: int, y: int, canvas: CanvasController) -> None:

@@ -9,6 +9,7 @@ from random import randint
 
 
 class FireParticle(Particle):
+    uuid = "fire"
 
     def __init__(self) -> None:
         super().__init__(color=8)

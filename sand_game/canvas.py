@@ -5,7 +5,7 @@ from typing import Union
 
 from sand_game.particles.Particle import Particle
 
-import pickle
+import json
 
 
 class CanvasController():
@@ -23,24 +23,59 @@ class CanvasController():
         for i in range(0, len(self.data)):
             self.data[i] = None
 
+    def _serialize(self) -> dict:
+        """Converts the object into a JSON dict
+
+        Returns:
+            str: The JSON form of the canvas
+        """
+        serial_obj = {
+            "width": self.width,
+            "height": self.height,
+        }
+        particles = []
+        particle: Particle
+        for particle in self.data:
+            if particle is None:
+                particles.append(particle)
+                continue
+
+            particles.append(particle._serialize())
+
+        serial_obj["particles"] = particles
+        return serial_obj
+
+    @staticmethod
+    def _from_serialized(serial_obj: dict) -> CanvasController:
+        new_canvas = CanvasController(serial_obj["width"], serial_obj["height"])
+        for i, particle_data in enumerate(serial_obj["particles"]):
+            if particle_data is None:
+                new_canvas.data[i] = None
+                continue
+
+            new_particle = Particle._from_serialized(particle_data)
+            new_canvas.data[i] = new_particle
+        return new_canvas
+
     def save_to_file(self, filename: str) -> None:
         """Saves the canvas to a file
 
         Args:
             filename (str): The file to save the canvas to
         """
-        with open(filename, "wb") as file:
-            pickle.dump([self.width, self.height, self.data], file)
+        with open(filename, "w+") as f:
+            json.dump(self._serialize(), f)
 
-    def load_from_file(self, filename: str) -> None:
+    @staticmethod
+    def load_from_file(filename: str) -> CanvasController:
         """Loads the canvas from a file
 
         Args:
             filename (str): The file to load the canvas from
         """
-        with open(filename, "rb") as file:
-            depickled = pickle.load(file)
-            self.width, self.height, self.data = depickled
+        with open(filename, "rb") as f:
+            serial_obj = json.load(f)
+            return CanvasController._from_serialized(serial_obj)
 
     def set(self, x: int, y: int, particle: Union[Particle, None]) -> None:
         """Sets the particle at the current location

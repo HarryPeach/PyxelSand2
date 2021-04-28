@@ -7,6 +7,7 @@ from random import randint
 
 
 class AcidParticle(Particle):
+    uuid = "acid"
 
     def __init__(self) -> None:
         super().__init__(color=11)

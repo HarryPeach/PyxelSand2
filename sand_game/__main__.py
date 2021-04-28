@@ -139,7 +139,7 @@ class SandGame:
         filename = self.open_filepicker(False)
         self.paused = True
         if filename != "":
-            self.canvas_controller.load_from_file(filename)
+            self.canvas_controller = CanvasController.load_from_file(filename)
 
     def open_filepicker(self, new: bool = False) -> str:
         """Opens a GUI filepicker

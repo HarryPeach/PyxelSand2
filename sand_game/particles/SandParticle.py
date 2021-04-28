@@ -6,6 +6,8 @@ from sand_game.particles.Particle import Particle
 
 
 class SandParticle(Particle):
+    uuid = "sand"
+
     def __init__(self) -> None:
         super().__init__(color=15, burntime=10)
 

@@ -6,6 +6,8 @@ from sand_game.particles.Particle import Particle
 
 
 class WaterParticle(Particle):
+    uuid = "water"
+
     def __init__(self) -> None:
         super().__init__(color=5)
 
