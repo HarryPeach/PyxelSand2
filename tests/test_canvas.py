@@ -155,5 +155,7 @@ class TestCanvas(unittest.TestCase):
         self._test_load_particle_data(True)
 
     def tearDown(self):
-        if os.path.exists(CANVAS_TEMP_FILENAME):
-            os.remove(CANVAS_TEMP_FILENAME)
+        cleanup_files = [CANVAS_TEMP_FILENAME, CANVAS_TEMP_FILENAME_CMP]
+        for cleanup_file in cleanup_files:
+            if os.path.exists(cleanup_file):
+                os.remove(cleanup_file)
