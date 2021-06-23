@@ -1,3 +1,4 @@
+from sand_game import canvas
 import pyxel
 
 
@@ -12,4 +13,11 @@ def draw_cursor(width: int, color: int, canvas_width: int, canvas_height: int,
         canvas_height (int): The height of the canvas
         canvas_start_loc (tuple[int, int]): The starting location of the canvas
     """
-    pyxel.circb(pyxel.mouse_x, pyxel.mouse_y, width, color)
+    if ((pyxel.mouse_x < canvas_start_loc[0] - 1 or
+            pyxel.mouse_x > canvas_start_loc[0] + canvas_width) or
+            (pyxel.mouse_y < canvas_start_loc[1] - 1 or
+                pyxel.mouse_y > canvas_start_loc[1] + canvas_height)):
+        pyxel.mouse(True)
+    else:
+        pyxel.mouse(False)
+        pyxel.circb(pyxel.mouse_x, pyxel.mouse_y, width, color)
