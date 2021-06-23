@@ -1,9 +1,10 @@
 from sand_game import canvas
 import pyxel
+from typing import Tuple
 
 
 def draw_cursor(width: int, color: int, canvas_width: int, canvas_height: int,
-                canvas_start_loc: tuple[int, int]) -> None:
+                canvas_start_loc: Tuple[int, int]) -> None:
     """Draws the cursor
 
     Args:
