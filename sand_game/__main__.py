@@ -164,7 +164,8 @@ class SandGame:
                                        defaultextension=".json",
                                        title="Export canvas")
         else:
-            result = askopenfilename(initialfile="import", title="Import canvas")
+            result = askopenfilename(
+                initialfile="import", title="Import canvas")
 
         return result
 
@@ -301,13 +302,15 @@ class SandGame:
                 particle = self.canvas_controller.get(x, y)
                 if particle is not None:
                     pyxel.pset(
-                        x + self.canvas_start_loc[0], y + self.canvas_start_loc[1],
+                        x + self.canvas_start_loc[0], y +
+                        self.canvas_start_loc[1],
                         particle.color
                     )
 
         self.gui.draw()
         self.gui.handle_hover(pyxel.mouse_x, pyxel.mouse_y)
-        draw_cursor(self.pen_size - 1, 7)
+        draw_cursor(self.pen_size - 1, 7, self.canvas_width,
+                    self.canvas_height, self.canvas_start_loc)
 
 
 if __name__ == "__main__":
