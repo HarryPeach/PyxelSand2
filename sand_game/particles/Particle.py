@@ -84,7 +84,7 @@ class Particle(ABC):
             canvas.set(x, y, None)
             return
 
-        dx_choice = random.choice([-1, 1])
+        dx_choice = random.choice([-1, 1, -2, 2])
 
         # Make sure the particles don't leave the canvas
         if (x + dx_choice) >= canvas.width or (x + dx_choice) < 0:
