@@ -1,5 +1,4 @@
-from sand_game.main_gui import MainGui
-from sand_game.particles.SandParticle import SandParticle
+from sand_game.gui.main_gui import MainGui
 from sand_game.game_state import GameState
 from sand_game.particles.Particle import Particle
 from sand_game.canvas import CanvasController
