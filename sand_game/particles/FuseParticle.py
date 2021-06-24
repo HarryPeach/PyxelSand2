@@ -9,7 +9,7 @@ class FuseParticle(Particle):
     uuid = "fuse"
 
     def __init__(self) -> None:
-        super().__init__(color=9, burntime=50)
+        super().__init__(color=9, burntime=35)
 
     def update(self, x: int, y: int, canvas: CanvasController) -> None:
         """Called when the particle must update its state

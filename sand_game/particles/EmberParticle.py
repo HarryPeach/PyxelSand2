@@ -24,7 +24,7 @@ class EmberParticle(Particle):
         from sand_game.particles.WaterParticle import WaterParticle
 
         self.updated = True
-        self.fall(x, y, canvas)
+        # self.fall(x, y, canvas)
 
         # Random chance to spread based on the burnability of the current object
         if randint(0, self.max_tick) == 1:
@@ -38,7 +38,8 @@ class EmberParticle(Particle):
                     canvas.set(x, y, None)
 
                 if particle.burntime >= 0:
-                    canvas.set(loc[0], loc[1], EmberParticle(particle.burntime))
+                    canvas.set(loc[0], loc[1],
+                               EmberParticle(particle.burntime))
 
         if self.tick == self.max_tick:
             canvas.set(x, y, None)
