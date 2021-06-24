@@ -59,13 +59,13 @@ class MainGui():
 
         # Pen size gui items
         self.gui.add_label(Label("Pen Size:", 0, 10, 7))
-        self._gui_pen_label = Label(str(self.game.pen_size), 11, 18, 7)
+        self._gui_pen_label = Label(str(GameState.pen_size), 11, 18, 7)
         self.gui.add_button(
-            TexturedButton(lambda: self.game._set_pen_size(self.game.pen_size - 1),
+            TexturedButton(lambda: GameState.set_pen_size(GameState.pen_size - 1),
                            0, 18, 5, 0, 5, 5, tooltip="Pen --"))
         self.gui.add_label(self._gui_pen_label)
         self.gui.add_button(
-            TexturedButton(lambda: self.game._set_pen_size(self.game.pen_size + 1),
+            TexturedButton(lambda: GameState.set_pen_size(GameState.pen_size + 1),
                            20, 18, 0, 0, 5, 5, tooltip="Pen ++"))
 
         # Particle gui items
@@ -113,7 +113,7 @@ class MainGui():
         self.gui.handle_click(mouse_x, mouse_y)
 
     def update_gui_items(self) -> None:
-        self._gui_pen_label.set_value(str(self.game.pen_size))
+        self._gui_pen_label.set_value(str(GameState.pen_size))
 
         self._gui_sand_button.set_enabled(
             GameState.current_particle == SandParticle

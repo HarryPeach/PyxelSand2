@@ -26,17 +26,11 @@ class SandGame:
         self.canvas_controller = CanvasController(
             self.canvas_width, self.canvas_height)
 
-        self.pen_size = 2
         self.overwrite = False
 
         self.gui = MainGui(114, 14, self)
 
         pyxel.run(self.update, self.draw)
-
-    def _set_pen_size(self, new_size: int) -> None:
-        if new_size < 1 or new_size > 9:
-            return
-        self.pen_size = new_size
 
     def _set_overwrite(self, overwrite: bool) -> None:
         self.overwrite = overwrite
@@ -137,17 +131,17 @@ class SandGame:
             self.place_particle(GameState.current_particle, pyxel.mouse_x -
                                 self.canvas_start_loc[0],
                                 pyxel.mouse_y - self.canvas_start_loc[1],
-                                self.pen_size)
+                                GameState.pen_size)
 
         if pyxel.btn(pyxel.MOUSE_RIGHT_BUTTON):
             self.place_particle(
                 None, pyxel.mouse_x - self.canvas_start_loc[0],
-                pyxel.mouse_y - self.canvas_start_loc[1], self.pen_size)
+                pyxel.mouse_y - self.canvas_start_loc[1], GameState.pen_size)
 
         if pyxel.mouse_wheel == 1:
-            self._set_pen_size(self.pen_size + 1)
+            GameState.set_pen_size(GameState.pen_size + 1)
         if pyxel.mouse_wheel == -1:
-            self._set_pen_size(self.pen_size - 1)
+            GameState.set_pen_size(GameState.pen_size - 1)
 
         self.gui.update_gui_items()
         self._update_particles()
@@ -198,7 +192,7 @@ class SandGame:
 
         self.gui.draw()
         self.gui.handle_hover(pyxel.mouse_x, pyxel.mouse_y)
-        draw_cursor(self.pen_size - 1, 7, self.canvas_width,
+        draw_cursor(GameState.pen_size - 1, 7, self.canvas_width,
                     self.canvas_height, self.canvas_start_loc)
 
 
