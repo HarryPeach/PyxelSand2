@@ -15,6 +15,9 @@ class GameState():
     # The size of the pen
     pen_size: int = 2
 
+    # Whether to overwrite other particles when placing
+    overwrite: bool = False
+
     @classmethod
     def set_current_particle(cls, particle: Particle):
         cls.current_particle = particle
@@ -28,3 +31,7 @@ class GameState():
         if size < 1 or size > 9:
             return
         cls.pen_size = size
+
+    @classmethod
+    def set_overwrite(cls, enable: bool):
+        cls.overwrite = enable

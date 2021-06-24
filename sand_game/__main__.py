@@ -26,14 +26,9 @@ class SandGame:
         self.canvas_controller = CanvasController(
             self.canvas_width, self.canvas_height)
 
-        self.overwrite = False
-
         self.gui = MainGui(114, 14, self)
 
         pyxel.run(self.update, self.draw)
-
-    def _set_overwrite(self, overwrite: bool) -> None:
-        self.overwrite = overwrite
 
     def export_canvas(self) -> None:
         """Saves the current canvas to a file
@@ -113,7 +108,7 @@ class SandGame:
             bool: Whether the particle can be placed
         """
         particle_at = self.canvas_controller.get(x, y)
-        if not self.overwrite and particle_at is not None:
+        if not GameState.overwrite and particle_at is not None:
             return False
         else:
             return True

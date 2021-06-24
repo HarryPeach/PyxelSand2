@@ -34,13 +34,13 @@ class MainGui():
                                            0, 20, 0, 5, 5, tooltip="Clear"))
 
         self._gui_overwrite_button_enable = TexturedButton(
-            lambda: self.game._set_overwrite(True), 12, 0, 30, 0, 5, 5,
+            lambda: GameState.set_overwrite(True), 12, 0, 30, 0, 5, 5,
             tooltip="Overwrite"
         )
         self.gui.add_button(self._gui_overwrite_button_enable)
 
         self._gui_overwrite_button_disable = TexturedButton(
-            lambda: self.game._set_overwrite(False), 12, 0, 25, 0, 5, 5, hidden=True,
+            lambda: GameState.set_overwrite(False), 12, 0, 25, 0, 5, 5, hidden=True,
             tooltip="Overwrite"
         )
         self.gui.add_button(self._gui_overwrite_button_disable)
@@ -137,5 +137,5 @@ class MainGui():
         self._gui_pause_button.set_hidden(GameState.paused)
         self._gui_play_button.set_hidden(not GameState.paused)
 
-        self._gui_overwrite_button_enable.set_hidden(self.game.overwrite)
-        self._gui_overwrite_button_disable.set_hidden(not self.game.overwrite)
+        self._gui_overwrite_button_enable.set_hidden(GameState.overwrite)
+        self._gui_overwrite_button_disable.set_hidden(not GameState.overwrite)
