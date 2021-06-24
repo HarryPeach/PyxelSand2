@@ -1,13 +1,8 @@
-from sand_game.particles.FuseParticle import FuseParticle
-from sand_game.particles.AcidParticle import AcidParticle
-from sand_game.particles.FireParticle import FireParticle
-from sand_game.particles.WaterParticle import WaterParticle
-from sand_game.particles.SandParticle import SandParticle
-from sand_game.particles.WallParticle import WallParticle
+from sand_game.gui.main_gui import MainGui
+from sand_game.game_state import GameState
 from sand_game.particles.Particle import Particle
 from sand_game.canvas import CanvasController
 from sand_game.draw_utils import draw_cursor
-from sand_game.gui import Gui, TexturedButton, Label
 from typing import Union
 from itertools import product
 from tkinter import Tk
@@ -30,109 +25,9 @@ class SandGame:
         self.canvas_controller = CanvasController(
             self.canvas_width, self.canvas_height)
 
-        self.pen_size = 2
-        self.paused = False
-        self.current_particle = SandParticle
-        self.overwrite = False
-
-        self.gui = Gui(114, 14)
-
-        self._gui_pause_button = TexturedButton(lambda: self._set_paused(True), 0, 0,
-                                                10, 0, 5, 5, tooltip="Pause")
-        self.gui.add_button(self._gui_pause_button)
-        self._gui_play_button = TexturedButton(lambda: self._set_paused(False), 0, 0,
-                                               15, 0, 5, 5, hidden=True,
-                                               tooltip="Resume")
-        self.gui.add_button(self._gui_play_button)
-
-        self.gui.add_button(TexturedButton(lambda: self.canvas_controller.clear(), 6,
-                                           0, 20, 0, 5, 5, tooltip="Clear"))
-
-        self._gui_overwrite_button_enable = TexturedButton(
-            lambda: self._set_overwrite(True), 12, 0, 30, 0, 5, 5,
-            tooltip="Overwrite"
-        )
-        self.gui.add_button(self._gui_overwrite_button_enable)
-
-        self._gui_overwrite_button_disable = TexturedButton(
-            lambda: self._set_overwrite(False), 12, 0, 25, 0, 5, 5, hidden=True,
-            tooltip="Overwrite"
-        )
-        self.gui.add_button(self._gui_overwrite_button_disable)
-
-        self._gui_import_button = TexturedButton(
-            self.import_canvas, 18, 0, 35, 0, 5, 5,
-            tooltip="Import"
-        )
-        self.gui.add_button(self._gui_import_button)
-
-        self._gui_import_button = TexturedButton(
-            self.export_canvas, 24, 0, 40, 0, 5, 5,
-            tooltip="Export"
-        )
-        self.gui.add_button(self._gui_import_button)
-
-        # Pen size gui items
-        self.gui.add_label(Label("Pen Size:", 0, 10, 7))
-        self._gui_pen_label = Label(str(self.pen_size), 11, 18, 7)
-        self.gui.add_button(
-            TexturedButton(lambda: self._set_pen_size(self.pen_size - 1),
-                           0, 18, 5, 0, 5, 5, tooltip="Pen --"))
-        self.gui.add_label(self._gui_pen_label)
-        self.gui.add_button(
-            TexturedButton(lambda: self._set_pen_size(self.pen_size + 1),
-                           20, 18, 0, 0, 5, 5, tooltip="Pen ++"))
-
-        # Particle gui items
-        self.gui.add_label(Label("Particles: ", 0, 26, 7))
-        self._gui_sand_button = TexturedButton(
-            lambda: self._set_current_particle(SandParticle),
-            0, 34, 0, 5, 15, 5, tooltip="Sand")
-        self.gui.add_button(self._gui_sand_button)
-        self._gui_wall_button = TexturedButton(
-            lambda: self._set_current_particle(WallParticle),
-            16, 34, 0, 10, 15, 5, tooltip="Wall"
-        )
-        self.gui.add_button(self._gui_wall_button)
-        self._gui_water_button = TexturedButton(
-            lambda: self._set_current_particle(WaterParticle),
-            0, 40, 0, 15, 15, 5, tooltip="Water"
-        )
-        self.gui.add_button(self._gui_water_button)
-
-        self._gui_fire_button = TexturedButton(
-            lambda: self._set_current_particle(FireParticle),
-            16, 40, 0, 20, 15, 5, tooltip="Fire"
-        )
-        self.gui.add_button(self._gui_fire_button)
-
-        self._gui_acid_button = TexturedButton(
-            lambda: self._set_current_particle(AcidParticle),
-            0, 46, 0, 25, 15, 5, tooltip="Acid"
-        )
-        self.gui.add_button(self._gui_acid_button)
-
-        self._gui_fuse_button = TexturedButton(
-            lambda: self._set_current_particle(FuseParticle),
-            16, 46, 0, 30, 15, 5, tooltip="Fuse"
-        )
-        self.gui.add_button(self._gui_fuse_button)
+        self.gui = MainGui(114, 14, self)
 
         pyxel.run(self.update, self.draw)
-
-    def _set_current_particle(self, particle: Particle) -> None:
-        self.current_particle = particle
-
-    def _set_pen_size(self, new_size: int) -> None:
-        if new_size < 1 or new_size > 9:
-            return
-        self.pen_size = new_size
-
-    def _set_paused(self, paused: bool) -> None:
-        self.paused = paused
-
-    def _set_overwrite(self, overwrite: bool) -> None:
-        self.overwrite = overwrite
 
     def export_canvas(self) -> None:
         """Saves the current canvas to a file
@@ -149,7 +44,7 @@ class SandGame:
         """
         filename = self.open_filepicker(False)
         if filename != "":
-            self.paused = True
+            GameState.paused = True
             self.canvas_controller = CanvasController.load_from_file(filename)
 
     def open_filepicker(self, new: bool = False) -> str:
@@ -212,7 +107,7 @@ class SandGame:
             bool: Whether the particle can be placed
         """
         particle_at = self.canvas_controller.get(x, y)
-        if not self.overwrite and particle_at is not None:
+        if not GameState.overwrite and particle_at is not None:
             return False
         else:
             return True
@@ -221,60 +116,32 @@ class SandGame:
         """Updates all of the items in the game
         """
         if pyxel.btnp(pyxel.KEY_SPACE):
-            self._set_paused(not self.paused)
+            GameState.set_paused(not GameState.paused)
 
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
             self.gui.handle_click(pyxel.mouse_x, pyxel.mouse_y)
 
         if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
-            self.place_particle(self.current_particle, pyxel.mouse_x -
+            self.place_particle(GameState.current_particle, pyxel.mouse_x -
                                 self.canvas_start_loc[0],
                                 pyxel.mouse_y - self.canvas_start_loc[1],
-                                self.pen_size)
+                                GameState.pen_size)
 
         if pyxel.btn(pyxel.MOUSE_RIGHT_BUTTON):
             self.place_particle(
                 None, pyxel.mouse_x - self.canvas_start_loc[0],
-                pyxel.mouse_y - self.canvas_start_loc[1], self.pen_size)
+                pyxel.mouse_y - self.canvas_start_loc[1], GameState.pen_size)
 
         if pyxel.mouse_wheel == 1:
-            self._set_pen_size(self.pen_size + 1)
+            GameState.set_pen_size(GameState.pen_size + 1)
         if pyxel.mouse_wheel == -1:
-            self._set_pen_size(self.pen_size - 1)
+            GameState.set_pen_size(GameState.pen_size - 1)
 
-        self._update_gui_items()
+        self.gui.update_gui_items()
         self._update_particles()
 
-    def _update_gui_items(self) -> None:
-        self._gui_pen_label.set_value(str(self.pen_size))
-
-        self._gui_sand_button.set_enabled(
-            self.current_particle == SandParticle
-        )
-        self._gui_wall_button.set_enabled(
-            self.current_particle == WallParticle
-        )
-        self._gui_water_button.set_enabled(
-            self.current_particle == WaterParticle
-        )
-        self._gui_fire_button.set_enabled(
-            self.current_particle == FireParticle
-        )
-        self._gui_acid_button.set_enabled(
-            self.current_particle == AcidParticle
-        )
-        self._gui_fuse_button.set_enabled(
-            self.current_particle == FuseParticle
-        )
-
-        self._gui_pause_button.set_hidden(self.paused)
-        self._gui_play_button.set_hidden(not self.paused)
-
-        self._gui_overwrite_button_enable.set_hidden(self.overwrite)
-        self._gui_overwrite_button_disable.set_hidden(not self.overwrite)
-
     def _update_particles(self) -> None:
-        if self.paused:
+        if GameState.paused:
             return
 
         # Update every particle
@@ -319,7 +186,7 @@ class SandGame:
 
         self.gui.draw()
         self.gui.handle_hover(pyxel.mouse_x, pyxel.mouse_y)
-        draw_cursor(self.pen_size - 1, 7, self.canvas_width,
+        draw_cursor(GameState.pen_size - 1, 7, self.canvas_width,
                     self.canvas_height, self.canvas_start_loc)
 
 
