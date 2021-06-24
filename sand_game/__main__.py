@@ -111,6 +111,12 @@ class SandGame:
         )
         self.gui.add_button(self._gui_acid_button)
 
+        self._gui_fuse_button = TexturedButton(
+            lambda: self._set_current_particle(AcidParticle),
+            16, 46, 0, 30, 15, 5, tooltip="Fuse"
+        )
+        self.gui.add_button(self._gui_fuse_button)
+
         pyxel.run(self.update, self.draw)
 
     def _set_current_particle(self, particle: Particle) -> None:

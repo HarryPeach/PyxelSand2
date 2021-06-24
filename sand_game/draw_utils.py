@@ -1,4 +1,3 @@
-from sand_game import canvas
 import pyxel
 from typing import Tuple
 
