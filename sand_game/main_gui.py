@@ -22,10 +22,10 @@ class MainGui():
         self.start_y = start_y
         self.game = game
 
-        self._gui_pause_button = TexturedButton(lambda: self.game._set_paused(True), 0, 0,
+        self._gui_pause_button = TexturedButton(lambda: GameState.set_paused(True), 0, 0,
                                                 10, 0, 5, 5, tooltip="Pause")
         self.gui.add_button(self._gui_pause_button)
-        self._gui_play_button = TexturedButton(lambda: self.game._set_paused(False), 0, 0,
+        self._gui_play_button = TexturedButton(lambda: GameState.set_paused(False), 0, 0,
                                                15, 0, 5, 5, hidden=True,
                                                tooltip="Resume")
         self.gui.add_button(self._gui_play_button)
@@ -134,8 +134,8 @@ class MainGui():
             GameState.current_particle == FuseParticle
         )
 
-        self._gui_pause_button.set_hidden(self.game.paused)
-        self._gui_play_button.set_hidden(not self.game.paused)
+        self._gui_pause_button.set_hidden(GameState.paused)
+        self._gui_play_button.set_hidden(not GameState.paused)
 
         self._gui_overwrite_button_enable.set_hidden(self.game.overwrite)
         self._gui_overwrite_button_disable.set_hidden(not self.game.overwrite)

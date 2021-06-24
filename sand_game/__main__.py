@@ -27,7 +27,6 @@ class SandGame:
             self.canvas_width, self.canvas_height)
 
         self.pen_size = 2
-        self.paused = False
         self.overwrite = False
 
         self.gui = MainGui(114, 14, self)
@@ -38,9 +37,6 @@ class SandGame:
         if new_size < 1 or new_size > 9:
             return
         self.pen_size = new_size
-
-    def _set_paused(self, paused: bool) -> None:
-        self.paused = paused
 
     def _set_overwrite(self, overwrite: bool) -> None:
         self.overwrite = overwrite
@@ -60,7 +56,7 @@ class SandGame:
         """
         filename = self.open_filepicker(False)
         if filename != "":
-            self.paused = True
+            GameState.paused = True
             self.canvas_controller = CanvasController.load_from_file(filename)
 
     def open_filepicker(self, new: bool = False) -> str:
@@ -132,7 +128,7 @@ class SandGame:
         """Updates all of the items in the game
         """
         if pyxel.btnp(pyxel.KEY_SPACE):
-            self._set_paused(not self.paused)
+            GameState.set_paused(not GameState.paused)
 
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
             self.gui.handle_click(pyxel.mouse_x, pyxel.mouse_y)
@@ -157,7 +153,7 @@ class SandGame:
         self._update_particles()
 
     def _update_particles(self) -> None:
-        if self.paused:
+        if GameState.paused:
             return
 
         # Update every particle
