@@ -1,5 +1,6 @@
 from sand_game.main_gui import MainGui
 from sand_game.particles.SandParticle import SandParticle
+from sand_game.game_state import GameState
 from sand_game.particles.Particle import Particle
 from sand_game.canvas import CanvasController
 from sand_game.draw_utils import draw_cursor
@@ -27,15 +28,11 @@ class SandGame:
 
         self.pen_size = 2
         self.paused = False
-        self.current_particle = SandParticle
         self.overwrite = False
 
         self.gui = MainGui(114, 14, self)
 
         pyxel.run(self.update, self.draw)
-
-    def _set_current_particle(self, particle: Particle) -> None:
-        self.current_particle = particle
 
     def _set_pen_size(self, new_size: int) -> None:
         if new_size < 1 or new_size > 9:
@@ -141,7 +138,7 @@ class SandGame:
             self.gui.handle_click(pyxel.mouse_x, pyxel.mouse_y)
 
         if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
-            self.place_particle(self.current_particle, pyxel.mouse_x -
+            self.place_particle(GameState.current_particle, pyxel.mouse_x -
                                 self.canvas_start_loc[0],
                                 pyxel.mouse_y - self.canvas_start_loc[1],
                                 self.pen_size)

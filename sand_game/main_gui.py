@@ -1,3 +1,4 @@
+from sand_game.game_state import GameState
 from sand_game.particles.WaterParticle import WaterParticle
 from sand_game.particles.FuseParticle import FuseParticle
 from sand_game.particles.AcidParticle import AcidParticle
@@ -70,34 +71,34 @@ class MainGui():
         # Particle gui items
         self.gui.add_label(Label("Particles: ", 0, 26, 7))
         self._gui_sand_button = TexturedButton(
-            lambda: self.game._set_current_particle(SandParticle),
+            lambda: GameState.set_current_particle(SandParticle),
             0, 34, 0, 5, 15, 5, tooltip="Sand")
         self.gui.add_button(self._gui_sand_button)
         self._gui_wall_button = TexturedButton(
-            lambda: self.game._set_current_particle(WallParticle),
+            lambda: GameState.set_current_particle(WallParticle),
             16, 34, 0, 10, 15, 5, tooltip="Wall"
         )
         self.gui.add_button(self._gui_wall_button)
         self._gui_water_button = TexturedButton(
-            lambda: self.game._set_current_particle(WaterParticle),
+            lambda: GameState.set_current_particle(WaterParticle),
             0, 40, 0, 15, 15, 5, tooltip="Water"
         )
         self.gui.add_button(self._gui_water_button)
 
         self._gui_fire_button = TexturedButton(
-            lambda: self.game._set_current_particle(FireParticle),
+            lambda: GameState.set_current_particle(FireParticle),
             16, 40, 0, 20, 15, 5, tooltip="Fire"
         )
         self.gui.add_button(self._gui_fire_button)
 
         self._gui_acid_button = TexturedButton(
-            lambda: self.game._set_current_particle(AcidParticle),
+            lambda: GameState.set_current_particle(AcidParticle),
             0, 46, 0, 25, 15, 5, tooltip="Acid"
         )
         self.gui.add_button(self._gui_acid_button)
 
         self._gui_fuse_button = TexturedButton(
-            lambda: self.game._set_current_particle(FuseParticle),
+            lambda: GameState.set_current_particle(FuseParticle),
             16, 46, 0, 30, 15, 5, tooltip="Fuse"
         )
         self.gui.add_button(self._gui_fuse_button)
@@ -115,22 +116,22 @@ class MainGui():
         self._gui_pen_label.set_value(str(self.game.pen_size))
 
         self._gui_sand_button.set_enabled(
-            self.game.current_particle == SandParticle
+            GameState.current_particle == SandParticle
         )
         self._gui_wall_button.set_enabled(
-            self.game.current_particle == WallParticle
+            GameState.current_particle == WallParticle
         )
         self._gui_water_button.set_enabled(
-            self.game.current_particle == WaterParticle
+            GameState.current_particle == WaterParticle
         )
         self._gui_fire_button.set_enabled(
-            self.game.current_particle == FireParticle
+            GameState.current_particle == FireParticle
         )
         self._gui_acid_button.set_enabled(
-            self.game.current_particle == AcidParticle
+            GameState.current_particle == AcidParticle
         )
         self._gui_fuse_button.set_enabled(
-            self.game.current_particle == FuseParticle
+            GameState.current_particle == FuseParticle
         )
 
         self._gui_pause_button.set_hidden(self.game.paused)
