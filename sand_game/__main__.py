@@ -82,8 +82,8 @@ class SandGame:
             center_y (int): The y-coordinate for the center of the circle
             radius (int): The radius of the circle
         """
-        for y, x in product(range(-radius, radius), repeat=2):
-            if (x * x + y * y > radius * radius):
+        for y, x in product(range(-(radius - 1), (radius)), repeat=2):
+            if (x * x + y * y >= ((radius - 1) * radius)):
                 continue
 
             if particle is None:
