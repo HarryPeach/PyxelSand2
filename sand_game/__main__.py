@@ -10,32 +10,8 @@ import pyxel
 
 
 class SandGame:
-    def _up(self):
-        ...
-
-    def _dr(self):
-        radius = 3
-        center_x = 40
-        center_y = 40
-
-        # print("==========")
-        # for y, x in product(range(-(radius - 1), (radius)), repeat=2):
-        #     print(f"({x},{y})")
-
-        # return
-
-        for y, x in product(range(-(radius - 1), (radius)), repeat=2):
-
-            if (x * x + y * y > radius * radius):
-                continue
-
-            pyxel.pset(center_x + x, center_y + y, 3)
-
     def __init__(self):
         pyxel.init(160, 120, fps=60, caption="Sand Game")
-        pyxel.run(self._up, self._dr)
-        # TODO: Remove this
-        return
 
         pyxel.load("assets/res.pyxres")
 
@@ -124,7 +100,7 @@ class SandGame:
             radius (int): The radius of the circle
         """
         for y, x in product(range(-(radius - 1), (radius)), repeat=2):
-            if (x * x + y * y > radius * radius):
+            if (x * x + y * y >= ((radius - 1) * radius)):
                 continue
 
             if particle is None:
