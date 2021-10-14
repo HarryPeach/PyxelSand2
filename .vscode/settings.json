@@ -2,5 +2,10 @@
 	"python.linting.pylamaEnabled": true,
 	"python.linting.enabled": true,
 	"python.linting.pycodestyleEnabled": false,
-	"python.pythonPath": ".venv\\Scripts\\python.exe"
+	"python.pythonPath": ".venv\\Scripts\\python.exe",
+	"spellright.language": [],
+	"spellright.documentTypes": [
+		"markdown",
+		"latex"
+	]
 }
